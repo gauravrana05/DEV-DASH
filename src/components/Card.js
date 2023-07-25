@@ -4,7 +4,7 @@ export default function Card({ name, description, providers }) {
 
   return (
     <div className="flex items-center justify-center py-12 px-4">
-        <div class="card w-80 bg-gray-200 text-orange-100 p-4 m-2 rounded  shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)]">
+        <div class="card w-80 bg-gray-200 text-orange-100 p-4 m-2 rounded  shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
           <div class="card-body">
             <div class=" flex float-right p-0  gap-2 ">
               <button class="px-2 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 ">
