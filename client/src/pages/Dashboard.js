@@ -30,6 +30,12 @@ export default function Dashboard() {
         providers = {["Google", "Spotify" , "Tinder"]}
 
       />
+      <Card 
+        name ="Netflex"
+        description= "Video streaming application"
+        providers = {["Google", "Spotify" , "Tinder"]}
+
+      />
       </div>
     </>
   )

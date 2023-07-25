@@ -62,7 +62,7 @@ export default function Card({ name, description, providers }) {
               </button>
             </div>
             <h2 class="card-title font-bold py-4 text-2xl text-purple-600">{name}</h2>
-            <p class="text-lg text-gray-800">{description}</p>
+            <p class="text-lg text-gray-800"></p>
             
             {providers.map((item) => {
                     return(<div class="card-actions inline-flex  mx-2 my-3">

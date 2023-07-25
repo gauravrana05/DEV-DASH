@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
-  const GoogleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID.slice(1, -2);
+  const GoogleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   return (
     <div>
       <GoogleOAuthProvider clientId={GoogleClientId}>
