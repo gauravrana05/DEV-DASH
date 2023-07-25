@@ -5,7 +5,13 @@ export default function Dashboard() {
   return (
     <>
       <Navbar  />
-    <div class="flex justify-center">
+    <div class="flex justify-center flex-wrap">
+    <Card 
+        name ="Netflex"
+        description= "Video streaming application"
+        providers = {["Google", "Spotify" , "Tinder"]}
+
+      />
       <Card 
         name ="Netflex"
         description= "Video streaming application"
