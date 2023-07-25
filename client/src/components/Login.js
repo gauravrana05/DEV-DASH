@@ -3,6 +3,7 @@ import { loginFields } from "../constants/formFields";
 import { FormAction, FormExtra } from "./Form";
 import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -10,6 +11,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Login() {
   const [loginState, setLoginState] = useState(fieldsState);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -24,10 +26,11 @@ export default function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("token", data.token);
+      navigate("/");
     } else {
       handleError(data.msg);
-      console.log(data);
     }
     setLoginState(fieldsState);
   };
@@ -41,14 +44,16 @@ export default function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("token", data.token);
+      navigate("/");
     } else {
       handleError(data.msg);
-      console.log(data);
     }
   };
 
   const handleError = (errorMsg) => {
+    console.log("From Login", errorMsg);
     //TO-DO: Add alert with data.msg
   };
 

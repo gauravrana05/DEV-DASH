@@ -17,11 +17,11 @@ const createApp = async (req, res) => {
       { new: true, ...opts }
     );
     if (!updatedApps) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     return res.status(200).json({
-      message: "Apps array updated successfully",
+      msg: "Apps array updated successfully",
       apps: updatedApps.apps,
     });
   } catch (error) {
@@ -31,10 +31,11 @@ const createApp = async (req, res) => {
         validationErrors.push(error.errors[field].message);
       }
       return res.status(403).json({
-        error: validationErrors,
+        msg: error.name,
+        msgErrors: validationErrors,
       });
     }
-    res.status(500).json({ error: error.errors });
+    res.status(500).json({ msg: error });
   }
 };
 
@@ -56,7 +57,7 @@ const updateApp = async (req, res) => {
       }
     );
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ msg: "User not found" });
     }
     return res.status(200).json({ apps: user.apps });
   } catch (error) {
@@ -67,10 +68,10 @@ const updateApp = async (req, res) => {
 /* READ */
 const getAllApps = async (req, res) => {
   try {
-    const { userId: id } = req.body;
+    const { userId: id } = req.params;
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ msg: "User not found" });
     }
 
     return res.status(200).json({ apps: user.apps });
@@ -89,7 +90,7 @@ const deleteApp = async (req, res) => {
       { new: true }
     );
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ msg: "User not found" });
     }
     return res.status(200).json({ apps: user.apps });
   } catch (error) {

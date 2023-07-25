@@ -8,7 +8,7 @@ const random = require("random-string-generator");
 /* REGISTER */
 const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, fullName } = req.body;
 
     const isExistingUser = await User.exists({ email });
     if (isExistingUser) {
@@ -20,6 +20,7 @@ const register = async (req, res) => {
 
     const newUser = new User({
       email,
+      name: fullName,
       password: hashPassword,
       apps: [],
     });
@@ -47,7 +48,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "12h",
     });
-    return res.status(200).json({ id: user._id, token });
+    return res.status(200).json({ id: user._id, name: user.name, token });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -66,14 +67,14 @@ const googleLogin = async (req, res) => {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      const password = random((length = "16"), (type = "alphanumeric"));
-      console.log(password);
+      const password = random((length = 16), (type = "alphanumeric"));
       const saltRounds = 10;
       const salt = await bcrypt.genSalt(saltRounds);
       const hashPassword = await bcrypt.hash(password, salt);
 
       const newUser = new User({
         email,
+        name,
         password: hashPassword,
         apps: [],
       });
@@ -91,6 +92,7 @@ const googleLogin = async (req, res) => {
       return res.status(200).json({ id: user._id, token });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };

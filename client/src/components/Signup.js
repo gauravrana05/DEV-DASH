@@ -3,6 +3,7 @@ import { signupFields } from "../constants/formFields";
 import { FormAction } from "./Form";
 import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 const fields = signupFields;
 let fieldsState = {};
@@ -11,6 +12,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
   const [signupState, setSignupState] = useState(fieldsState);
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
@@ -24,10 +26,9 @@ export default function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
+      navigate("/login");
     } else {
       handleError(data.msg);
-      console.log(data);
     }
     setSignupState(fieldsState);
   };
@@ -41,14 +42,14 @@ export default function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
+      navigate("/login");
     } else {
       handleError(data.msg);
-      console.log(data);
     }
   };
 
   const handleError = (errorMsg) => {
+    console.log("From signup", errorMsg);
     //TO-DO: Add alert with data.msg
   };
 
@@ -81,7 +82,7 @@ export default function Signup() {
           onSuccess={(credentialResponse) =>
             handleGoogleLogin(credentialResponse.credential)
           }
-          onError={handleError("Login failed")}
+          onError={() => handleError("Login failed")}
         />
       </div>
     </div>
