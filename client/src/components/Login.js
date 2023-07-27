@@ -28,7 +28,7 @@ export default function Login() {
     if (response.ok) {
       localStorage.setItem("id", data.id);
       localStorage.setItem("token", data.token);
-      navigate("/");
+      navigate("/dashboard");
     } else {
       handleError(data.msg);
     }
@@ -46,7 +46,7 @@ export default function Login() {
     if (response.ok) {
       localStorage.setItem("id", data.id);
       localStorage.setItem("token", data.token);
-      navigate("/");
+      navigate("/dashboard");
     } else {
       handleError(data.msg);
     }
@@ -83,7 +83,7 @@ export default function Login() {
         <GoogleLogin
           text="continue_with"
           width="100%"
-          shape="pill"
+          shape="l" pil
           onSuccess={(credentialResponse) =>
             handleGoogleLogin(credentialResponse.credential)
           }

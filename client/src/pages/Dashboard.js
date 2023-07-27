@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/Card.js";
 import Navbar from "../components/Navbar.js";
 import HomePage from "./Home.js";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [apps, setApps] = useState([]);
@@ -38,7 +38,7 @@ export default function Dashboard() {
   const handleError = (errorMsg) => {
     //TO-DO: Add alert with data.msg
     if (errorMsg === "Invalid Token" || "Access  Denied" || "Token Expired") {
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -50,6 +50,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
+      <HomePage />
       {isLoading ? (
         <>{/* TO-DO: ADD SPINNER LOADING COMPONENT AND EFFECTS */}</>
       ) : (
@@ -62,7 +63,6 @@ export default function Dashboard() {
                 return (
                   <Card
                     name={app.appName}
-                    description="Video streaming application"
                     providers={app.provider}
                   />
                 );

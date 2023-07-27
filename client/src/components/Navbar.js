@@ -31,7 +31,7 @@ export default function Navbar() {
             <div className="">
               <Link
                 className=" rounded-md bg-purple-600 px-5 py-2 text-sm font-medium text-white  hover:bg-purple-700 "
-                to="/login"
+                to="/"
                 onClick={() => {
                   localStorage.removeItem("id");
                   localStorage.removeItem("token");
