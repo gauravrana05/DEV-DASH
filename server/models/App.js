@@ -19,7 +19,7 @@ const AppSchema = new Schema({
     type: String,
     required: true,
   },
-  provider: {
+  providers: {
     type: [String],
     enum: {
       values: providerEnum,

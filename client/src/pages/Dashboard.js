@@ -2,11 +2,14 @@
 import { useEffect, useState } from "react";
 import Card from "../components/Card.js";
 import Navbar from "../components/Navbar.js";
-import HomePage from "./Home.js";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner.jsx";
+import CreateButton from "../components/CreateButton.js";
+import CreateEditCard from "../components/CreateEditCard.js";
 
 export default function Dashboard() {
   const [apps, setApps] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -47,25 +50,30 @@ export default function Dashboard() {
     getApps();
   }, []);
 
+  const handleCreateButton = () => {
+    setIsOpen((current) => !current);
+  };
+
   return (
     <>
       <Navbar />
-      <HomePage />
+      <div className="mb-10">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Welcome to Dev-Dash
+        </h2>
+      </div>
+      <CreateButton handleCreateButton={handleCreateButton} />
+      <CreateEditCard isOpen={isOpen} />
       {isLoading ? (
-        <>{/* TO-DO: ADD SPINNER LOADING COMPONENT AND EFFECTS */}</>
+        <Spinner loading={isLoading} />
       ) : (
         <>
           {apps.length === 0 ? (
-            <HomePage />
+            ""
           ) : (
             <div className="flex justify-center flex-wrap">
               {apps.map((app) => {
-                return (
-                  <Card
-                    name={app.appName}
-                    providers={app.provider}
-                  />
-                );
+                return <Card name={app.appName} providers={app.providers} />;
               })}
             </div>
           )}

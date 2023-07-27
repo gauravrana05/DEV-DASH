@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <header className="bg-purple-100">
+    <header className="bg-purple-100 sticky top-0">
       <div className="mx-auto flex h-16 items-center gap-8 px-4">
         <Link className="block text-purple-600" to="/">
           <span className="sr-only">Home</span>
@@ -31,7 +31,7 @@ export default function Navbar() {
             <div className="">
               <Link
                 className=" rounded-md bg-purple-600 px-5 py-2 text-sm font-medium text-white  hover:bg-purple-700 "
-                to="/"
+                to="/login"
                 onClick={() => {
                   localStorage.removeItem("id");
                   localStorage.removeItem("token");

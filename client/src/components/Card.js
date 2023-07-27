@@ -1,4 +1,4 @@
-export default function Card({ name, description, providers }) {
+export default function Card({ name, providers }) {
   return (
     <div className="flex items-center justify-center py-12 px-4">
       <div className="card w-80 bg-gray-200 text-orange-100 p-4 m-2 rounded  shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">

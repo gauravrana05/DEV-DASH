@@ -1,14 +1,12 @@
 const User = require("../models/User");
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 
 /* CREATE */
 const createApp = async (req, res) => {
   try {
-    const { appName, provider, userId } = req.body;
+    const { appName, providers, userId } = req.body;
     const appData = {
       appName,
-      provider,
+      providers,
     };
     const opts = { runValidators: true };
     const updatedApps = await User.findOneAndUpdate(
@@ -42,13 +40,13 @@ const createApp = async (req, res) => {
 /* UPDATE */
 const updateApp = async (req, res) => {
   try {
-    const { userId: id, appId, updatedAppName, updatedProvider } = req.body;
+    const { userId: id, appId, updatedAppName, updatedProviders } = req.body;
     const user = await User.findByIdAndUpdate(
       id,
       {
         $set: {
           "apps.$[elem].appName": updatedAppName,
-          "apps.$[elem].provider": updatedProvider,
+          "apps.$[elem].providers": updatedProviders,
         },
       },
       {
