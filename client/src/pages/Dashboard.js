@@ -27,23 +27,42 @@ export default function Dashboard() {
         }
       );
       const data = await response.json();
+      setIsLoading(false);
       if (!response.ok) {
         handleError(data.msg);
       } else {
         setApps(data.apps);
-        console.log(apps);
-        setIsLoading(false);
       }
     } catch (error) {
       console.log("from dashboard", error);
     }
   };
 
+  const editApp = async (appId, appName, providers) => {
+    // setIsOpen(false);
+    console.log("from editapps func", appName, appId, providers);
+    <CreateEditCard
+      isOpen={isOpen}
+      appName={appName}
+      providers={providers}
+      type="update"
+      appId={appId}
+      setApps={setApps}
+      setIsOpen={setIsOpen}
+    />;
+    setIsOpen(true);
+  };
+
   const handleError = (errorMsg) => {
     //TO-DO: Add alert with data.msg
     if (errorMsg === "Invalid Token" || "Access  Denied" || "Token Expired") {
-      navigate("/");
+      console.log("reached here because of", errorMsg);
+      navigate("/login");
     }
+  };
+
+  const handleCreateButton = () => {
+    setIsOpen((current) => !current);
   };
 
   useEffect(() => {
@@ -51,24 +70,28 @@ export default function Dashboard() {
     getApps();
   }, []);
 
-  const handleCreateButton = () => {
-    setIsOpen((current) => !current);
-  };
-
   return (
     <>
       <Navbar />
-      <div className="mb-10" >
+      <div className="mb-10">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Welcome to Dev-Dash
         </h2>
       </div>
       <CreateButton handleCreateButton={handleCreateButton} />
-      <CreateEditCard isOpen={isOpen} />
+      <CreateEditCard
+        isOpen={isOpen}
+        type="create"
+        setApps={setApps}
+        setIsOpen={setIsOpen}
+        appId=""
+        appName=""
+        providers={[]}
+      />
       {isLoading ? (
         <div className="flex justify-center ">
-       <Spinner loading={isLoading} />
-       </div>
+          <Spinner loading={isLoading} />
+        </div>
       ) : (
         <>
           {apps.length === 0 ? (
@@ -76,7 +99,16 @@ export default function Dashboard() {
           ) : (
             <div className="flex justify-center flex-wrap">
               {apps.map((app) => {
-                return <Card name={app.appName} providers={app.providers} />;
+                return (
+                  <Card
+                    key={app._id}
+                    setApps={setApps}
+                    appId={app._id}
+                    appName={app.appName}
+                    providers={app.providers}
+                    editApp={editApp}
+                  />
+                );
               })}
             </div>
           )}

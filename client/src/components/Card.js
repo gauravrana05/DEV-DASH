@@ -1,4 +1,29 @@
-export default function Card({ name, providers }) {
+export default function Card({ appName, providers, appId, setApps, editApp }) {
+  const deleteApp = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
+    const response = await fetch("http://localhost:5000/app/delete", {
+      headers: { Authorization: token, "Content-Type": "application/json" },
+      method: "DELETE",
+      body: JSON.stringify({
+        userId,
+        appId,
+      }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data);
+      setApps(data.apps);
+    } else {
+      handleError(data.msg);
+    }
+  };
+
+  const handleError = (errorMsg) => {
+    console.log("From card", errorMsg);
+    //TO-DO: Add alert with data.msg
+  };
+
   return (
     <div className="flex items-center justify-center py-12 px-4">
       <div className="card w-80 bg-gray-200 text-orange-100 p-4 m-2 rounded  shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
@@ -12,6 +37,7 @@ export default function Card({ name, providers }) {
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                onClick={() => editApp(appId, appName, providers)}
               >
                 {" "}
                 <path
@@ -48,6 +74,7 @@ export default function Card({ name, providers }) {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                onClick={() => deleteApp()}
               >
                 <path
                   stroke-linecap="round"
@@ -59,13 +86,13 @@ export default function Card({ name, providers }) {
             </button>
           </div>
           <h2 className="card-title font-bold py-4 text-2xl text-purple-600">
-            {name}
+            {appName}
           </h2>
           <p className="text-lg text-gray-800"></p>
 
-          {providers.map((item) => {
+          {providers.map((item, index) => {
             return (
-              <div className="card-actions inline-flex  mx-2 my-3">
+              <div className="card-actions inline-flex  mx-2 my-3" key={index}>
                 <span className="border-2 rounded-full bg-white text-purple-600 px-2 py-1 shadow-[5px_5px_0px_0px_rgba(109,40,217)]">
                   {" "}
                   {item}{" "}

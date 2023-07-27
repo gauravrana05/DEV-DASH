@@ -8,16 +8,14 @@ const createApp = async (req, res) => {
       appName,
       providers,
     };
-    const opts = { runValidators: true };
     const updatedApps = await User.findOneAndUpdate(
       { _id: userId },
       { $push: { apps: appData } },
-      { new: true, ...opts }
+      { new: true, runValidators: true }
     );
     if (!updatedApps) {
       return res.status(404).json({ msg: "User not found" });
     }
-
     return res.status(200).json({
       msg: "Apps array updated successfully",
       apps: updatedApps.apps,
@@ -82,6 +80,7 @@ const getAllApps = async (req, res) => {
 const deleteApp = async (req, res) => {
   try {
     const { userId: id, appId } = req.body;
+    console.log(id, appId);
     const user = await User.findByIdAndUpdate(
       id,
       { $pull: { apps: { _id: appId } } },

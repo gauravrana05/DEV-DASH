@@ -4,7 +4,7 @@ const fixedInputClass =
 export default function Input({
   handleChange,
   value,
-  labelText,
+  labelText = "abc",
   labelFor,
   id,
   name,
@@ -15,7 +15,7 @@ export default function Input({
 }) {
   return (
     <div className="my-5">
-      <label htmlFor={labelFor} className="sr-only">
+      <label htmlFor={labelFor} className="text-purple-600">
         {labelText}
       </label>
       <input

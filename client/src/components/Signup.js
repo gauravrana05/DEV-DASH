@@ -44,7 +44,9 @@ export default function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      navigate("/login");
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("token", data.token);
+      navigate("/");
     } else {
       handleError(data.msg);
     }
