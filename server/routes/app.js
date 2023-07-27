@@ -11,7 +11,7 @@ const {
 const router = express.Router();
 
 /* CREATING REQUIRED ROUTES */
-router.post("/create", verifyToken, createApp);
+router.put("/create", verifyToken, createApp);
 router.patch("/update", verifyToken, updateApp);
 router.get("/getAll/:userId", verifyToken, getAllApps);
 router.delete("/delete", verifyToken, deleteApp);

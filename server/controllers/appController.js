@@ -4,6 +4,7 @@ const User = require("../models/User");
 const createApp = async (req, res) => {
   try {
     const { appName, providers, userId } = req.body;
+    console.log(appName, providers, userId);
     const appData = {
       appName,
       providers,
@@ -80,7 +81,6 @@ const getAllApps = async (req, res) => {
 const deleteApp = async (req, res) => {
   try {
     const { userId: id, appId } = req.body;
-    console.log(id, appId);
     const user = await User.findByIdAndUpdate(
       id,
       { $pull: { apps: { _id: appId } } },

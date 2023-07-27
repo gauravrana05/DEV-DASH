@@ -1,6 +1,6 @@
 import React from "react";
 
-const CreateButton = ({ handleCreateButton }) => {
+const CreateButton = ({ isOpen, handleCreateButton }) => {
   return (
     <div className="flex justify-center mt-9">
       <button
@@ -24,7 +24,9 @@ const CreateButton = ({ handleCreateButton }) => {
             ></path>
           </svg>
         </span>
-        <span className="relative">Create Application</span>
+        <span className="relative">
+          {isOpen ? "Close" : "Create"} Application
+        </span>
       </button>
     </div>
   );
