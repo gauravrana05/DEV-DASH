@@ -31,6 +31,7 @@ export default function Dashboard() {
         handleError(data.msg);
       } else {
         setApps(data.apps);
+        console.log(apps);
         setIsLoading(false);
       }
     } catch (error) {
@@ -57,7 +58,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="mb-10">
+      <div className="mb-10" >
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Welcome to Dev-Dash
         </h2>
@@ -65,7 +66,9 @@ export default function Dashboard() {
       <CreateButton handleCreateButton={handleCreateButton} />
       <CreateEditCard isOpen={isOpen} />
       {isLoading ? (
-        <Spinner loading={isLoading} />
+        <div className="flex justify-center ">
+       <Spinner loading={isLoading} />
+       </div>
       ) : (
         <>
           {apps.length === 0 ? (

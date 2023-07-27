@@ -64,4 +64,19 @@ const signupFields = [
   },
 ];
 
-export { loginFields, signupFields };
+
+
+const createAppField = [
+  {
+    labelText: "App Name",
+    labelFor: "appName",
+    id: "appName",
+    name: "appName",
+    type: "text",
+    autoComplete: "appName",
+    isRequired: true,
+    placeholder: "App Name",
+  },
+];
+
+export { loginFields, signupFields, createAppField };

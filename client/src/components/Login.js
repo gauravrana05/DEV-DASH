@@ -46,7 +46,7 @@ export default function Login() {
     if (response.ok) {
       localStorage.setItem("id", data.id);
       localStorage.setItem("token", data.token);
-      navigate("/dashboard");
+      navigate("/");
     } else {
       handleError(data.msg);
     }
@@ -88,7 +88,7 @@ export default function Login() {
           onSuccess={(credentialResponse) =>
             handleGoogleLogin(credentialResponse.credential)
           }
-          onError={handleError("Login failed")}
+          onError={() => handleError("Login failed")}
         />
       </div>
     </div>
