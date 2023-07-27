@@ -29,7 +29,10 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
       <div className="card w-80 bg-gray-200 text-orange-100 p-4 m-2 rounded  shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
         <div className="card-body">
           <div className=" flex float-right p-0  gap-2 ">
-            <button className="px-2 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 ">
+            <button
+              className="px-2 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 "
+              onClick={() => editApp(appId, appName, providers)}
+            >
               <svg
                 width="24"
                 stroke-width="1.5"
@@ -37,7 +40,6 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                onClick={() => editApp(appId, appName, providers)}
               >
                 {" "}
                 <path
@@ -67,14 +69,16 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
                 />{" "}
               </svg>
             </button>
-            <button className=" px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+            <button
+              className=" px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+              onClick={() => deleteApp()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                onClick={() => deleteApp()}
               >
                 <path
                   stroke-linecap="round"
@@ -90,9 +94,9 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
           </h2>
           <p className="text-lg text-gray-800"></p>
 
-          {providers.map((item, index) => {
+          {providers.map((item) => {
             return (
-              <div className="card-actions inline-flex  mx-2 my-3" key={index}>
+              <div className="card-actions inline-flex  mx-2 my-3" key={item}>
                 <span className="border-2 rounded-full bg-white text-purple-600 px-2 py-1 shadow-[5px_5px_0px_0px_rgba(109,40,217)]">
                   {" "}
                   {item}{" "}

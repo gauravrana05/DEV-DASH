@@ -11,6 +11,11 @@ export default function Dashboard() {
   const [apps, setApps] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [type, setType] = useState("create");
+  const [toUpdateAppId, setToUpdateAppId] = useState("");
+  const [toUpdateAppName, setToUpdateAppName] = useState("");
+  const [toUpdateProvider, setToUpdateProvider] = useState([]);
+
   const navigate = useNavigate();
 
   const getApps = async () => {
@@ -39,17 +44,17 @@ export default function Dashboard() {
   };
 
   const editApp = async (appId, appName, providers) => {
-    // setIsOpen(false);
-    console.log("from editapps func", appName, appId, providers);
-    <CreateEditCard
-      isOpen={isOpen}
-      appName={appName}
-      providers={providers}
-      type="update"
-      appId={appId}
-      setApps={setApps}
-      setIsOpen={setIsOpen}
-    />;
+    setType("update");
+    setToUpdateAppId(appId);
+    setToUpdateAppName(appName);
+    setToUpdateProvider(providers);
+    var element = document.getElementById("Heading");
+    element.scrollIntoView();
+    element.scrollIntoView({
+      behavior: "auto",
+      block: "start",
+      inline: "center",
+    });
     setIsOpen(true);
   };
 
@@ -62,6 +67,10 @@ export default function Dashboard() {
   };
 
   const handleCreateButton = () => {
+    setType("create");
+    setToUpdateAppId("");
+    setToUpdateAppName("");
+    setToUpdateProvider([]);
     setIsOpen((current) => !current);
   };
 
@@ -74,20 +83,24 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div className="mb-10">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2
+          className="mt-6 text-center text-3xl font-extrabold text-gray-900"
+          id="Heading"
+        >
           Welcome to Dev-Dash
         </h2>
       </div>
-      <CreateButton handleCreateButton={handleCreateButton} />
-      <CreateEditCard
-        isOpen={isOpen}
-        type="create"
-        setApps={setApps}
-        setIsOpen={setIsOpen}
-        appId=""
-        appName=""
-        providers={[]}
-      />
+      <CreateButton isOpen={isOpen} handleCreateButton={handleCreateButton} />
+      {isOpen && (
+        <CreateEditCard
+          type={type}
+          setApps={setApps}
+          setIsOpen={setIsOpen}
+          appId={toUpdateAppId}
+          appName={toUpdateAppName}
+          providers={toUpdateProvider}
+        />
+      )}
       {isLoading ? (
         <div className="flex justify-center ">
           <Spinner loading={isLoading} />
