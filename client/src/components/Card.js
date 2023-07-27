@@ -1,7 +1,12 @@
-export default function Card({ appName, providers, appId, setApps, editApp }) {
+import { useDispatch, useSelector } from "react-redux";
+import { setApps } from "../features/userSlice";
+
+export default function Card({ appName, providers, appId, editApp }) {
+  const token = useSelector((state) => state.user.token);
+  const userId = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
+
   const deleteApp = async () => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
     const response = await fetch("http://localhost:5000/app/delete", {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: "DELETE",
@@ -13,7 +18,7 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
     const data = await response.json();
     if (response.ok) {
       console.log(data);
-      setApps(data.apps);
+      dispatch(setApps({ apps: data.apps }));
     } else {
       handleError(data.msg);
     }
@@ -31,7 +36,7 @@ export default function Card({ appName, providers, appId, setApps, editApp }) {
           <div className=" flex float-right p-0  gap-2 ">
             <button
               className="px-2 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 "
-              onClick={() => editApp(appId, appName, providers)}
+              onClick={() => editApp(appId)}
             >
               <svg
                 width="24"

@@ -4,6 +4,8 @@ import { FormAction, FormExtra } from "./Form";
 import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../features/userSlice";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -11,6 +13,8 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Login() {
   const [loginState, setLoginState] = useState(fieldsState);
+  const [remember, setRemember] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,8 +30,11 @@ export default function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("id", data.id);
-      localStorage.setItem("token", data.token);
+      dispatch(login(data));
+      if (remember) {
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("token", data.token);
+      }
       navigate("/");
     } else {
       handleError(data.msg);
@@ -44,8 +51,7 @@ export default function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("id", data.id);
-      localStorage.setItem("token", data.token);
+      dispatch(login(data));
       navigate("/");
     } else {
       handleError(data.msg);
@@ -56,6 +62,12 @@ export default function Login() {
     console.log("From Login", errorMsg);
     //TO-DO: Add alert with data.msg
   };
+
+  // useEffect(() => {
+  //   if (token) {
+  //     navigate("/");
+  //   }
+  // });
 
   return (
     <div>
@@ -76,7 +88,7 @@ export default function Login() {
             />
           ))}
         </div>
-        <FormExtra />
+        <FormExtra setRemember={setRemember} />
         <FormAction handleSubmit={handleSubmit} text="Login" />
       </form>
       <div className="flex justify-center items-center py-4">

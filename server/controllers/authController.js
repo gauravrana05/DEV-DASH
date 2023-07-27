@@ -29,14 +29,12 @@ const register = async (req, res) => {
       expiresIn: "12h",
     });
 
-    return res
-      .status(201)
-      .json({
-        id: savedUser._id,
-        name: savedUser.name,
-        token,
-        msg: "User registered successfully",
-      });
+    return res.status(201).json({
+      id: savedUser._id,
+      name: savedUser.name,
+      token,
+      msg: "User registered successfully",
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -99,7 +97,7 @@ const googleLogin = async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "12h",
       });
-      return res.status(200).json({ id: user._id, token });
+      return res.status(200).json({ id: user._id, token, name });
     }
   } catch (error) {
     console.log(error);

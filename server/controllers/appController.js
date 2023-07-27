@@ -4,7 +4,6 @@ const User = require("../models/User");
 const createApp = async (req, res) => {
   try {
     const { appName, providers, userId } = req.body;
-    console.log(appName, providers, userId);
     const appData = {
       appName,
       providers,
@@ -39,13 +38,17 @@ const createApp = async (req, res) => {
 /* UPDATE */
 const updateApp = async (req, res) => {
   try {
-    const { userId: id, appId, updatedAppName, updatedProviders } = req.body;
+    const { userId: id, appId, appName, providers } = req.body;
+    const isApp = await User.findOne({ "apps._id": appId });
+    if (!isApp) {
+      return res.status(404).json({ msg: "App not found" });
+    }
     const user = await User.findByIdAndUpdate(
       id,
       {
         $set: {
-          "apps.$[elem].appName": updatedAppName,
-          "apps.$[elem].providers": updatedProviders,
+          "apps.$[elem].appName": appName,
+          "apps.$[elem].providers": providers,
         },
       },
       {
