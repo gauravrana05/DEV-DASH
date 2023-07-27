@@ -64,7 +64,6 @@ const CreateEditCard = ({
     const updatedProviders = getProviders(prov);
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("id");
-    console.log(userId, appId, name);
     const method = type === "create" ? "PUT" : "PATCH";
     const response = await fetch(`http://localhost:5000/app/${type}`, {
       headers: { Authorization: token, "Content-Type": "application/json" },
@@ -78,7 +77,6 @@ const CreateEditCard = ({
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
       setApps(data.apps);
     } else {
       handleError(data.msg);
