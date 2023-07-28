@@ -6,22 +6,21 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner.jsx";
 import CreateButton from "../components/CreateButton.js";
 import CreateEditCard from "../components/CreateEditCard.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setApps } from "../features/userSlice.js";
 
 export default function Dashboard() {
-  const [apps, setApps] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [type, setType] = useState("create");
   const [toUpdateAppId, setToUpdateAppId] = useState("");
-  const [toUpdateAppName, setToUpdateAppName] = useState("");
-  const [toUpdateProvider, setToUpdateProvider] = useState([]);
-
+  const token = useSelector((state) => state.user.token);
+  const userId = useSelector((state) => state.user.id);
+  let apps = useSelector((state) => state.user.apps);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const getApps = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("id");
       const response = await fetch(
         `http://localhost:5000/app/getAll/${userId}`,
         {
@@ -32,22 +31,19 @@ export default function Dashboard() {
         }
       );
       const data = await response.json();
-      setIsLoading(false);
       if (!response.ok) {
         handleError(data.msg);
       } else {
-        setApps(data.apps);
+        dispatch(setApps({ apps: data.apps }));
       }
+      setIsLoading(false);
     } catch (error) {
       console.log("from dashboard", error);
     }
   };
 
-  const editApp = async (appId, appName, providers) => {
-    setType("update");
+  const editApp = async (appId) => {
     setToUpdateAppId(appId);
-    setToUpdateAppName(appName);
-    setToUpdateProvider(providers);
     var element = document.getElementById("Heading");
     element.scrollIntoView();
     element.scrollIntoView({
@@ -67,16 +63,18 @@ export default function Dashboard() {
   };
 
   const handleCreateButton = () => {
-    setType("create");
     setToUpdateAppId("");
-    setToUpdateAppName("");
-    setToUpdateProvider([]);
     setIsOpen((current) => !current);
   };
 
   useEffect(() => {
     setIsLoading(true);
-    getApps();
+    if (!token || token.size === 0) {
+      console.log("navigating because of this");
+      navigate("/login");
+    } else {
+      getApps();
+    }
   }, []);
 
   return (
@@ -91,16 +89,7 @@ export default function Dashboard() {
         </h2>
       </div>
       <CreateButton isOpen={isOpen} handleCreateButton={handleCreateButton} />
-      {isOpen && (
-        <CreateEditCard
-          type={type}
-          setApps={setApps}
-          setIsOpen={setIsOpen}
-          appId={toUpdateAppId}
-          appName={toUpdateAppName}
-          providers={toUpdateProvider}
-        />
-      )}
+      {isOpen && <CreateEditCard setIsOpen={setIsOpen} appId={toUpdateAppId} />}
       {isLoading ? (
         <div className="flex justify-center ">
           <Spinner loading={isLoading} />
@@ -115,7 +104,6 @@ export default function Dashboard() {
                 return (
                   <Card
                     key={app._id}
-                    setApps={setApps}
                     appId={app._id}
                     appName={app.appName}
                     providers={app.providers}

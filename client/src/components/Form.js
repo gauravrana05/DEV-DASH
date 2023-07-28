@@ -23,7 +23,7 @@ export function FormAction({
   );
 }
 
-export function FormExtra() {
+export function FormExtra({ setRemember }) {
   return (
     <div className="flex items-center justify-between ">
       <div className="flex items-center">
@@ -32,6 +32,7 @@ export function FormExtra() {
           name="remember-me"
           type="checkbox"
           className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+          onClick={() => setRemember((prev) => !prev)}
         />
         <label
           htmlFor="remember-me"

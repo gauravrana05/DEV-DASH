@@ -4,6 +4,8 @@ import { FormAction } from "./Form";
 import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../features/userSlice";
 
 const fields = signupFields;
 let fieldsState = {};
@@ -13,6 +15,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 export default function Signup() {
   const [signupState, setSignupState] = useState(fieldsState);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
@@ -26,8 +29,7 @@ export default function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("id", data.id);
-      localStorage.setItem("token", data.token);
+      dispatch(login({ token: data.token, id: data.id }));
       navigate("/");
     } else {
       handleError(data.msg);
@@ -44,8 +46,7 @@ export default function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      localStorage.setItem("id", data.id);
-      localStorage.setItem("token", data.token);
+      dispatch(login({ token: data.token, id: data.id }));
       navigate("/");
     } else {
       handleError(data.msg);

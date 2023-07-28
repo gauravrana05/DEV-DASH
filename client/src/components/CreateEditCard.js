@@ -5,6 +5,8 @@ import Input from "./Input";
 import Select from "react-tailwindcss-select";
 import { FormAction } from "./Form";
 import { useNavigate } from "react-router-dom";
+import { setApps } from "../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const options = [
   { value: "Google", label: "Google" },
@@ -19,14 +21,7 @@ const options = [
   { value: "Facebook", label: "Facebook" },
 ];
 
-const CreateEditCard = ({
-  appName,
-  providers,
-  type,
-  appId,
-  setApps,
-  setIsOpen,
-}) => {
+const CreateEditCard = ({ appId, setIsOpen }) => {
   const setProviders = (providers) => {
     const updatedProviders = options.filter((option) => {
       return providers.includes(option.value);
@@ -34,15 +29,27 @@ const CreateEditCard = ({
     return updatedProviders;
   };
 
-  const [prov, setProv] = useState(setProviders(providers));
-  const [name, setName] = useState(appName);
+  const [prov, setProv] = useState([]);
+  const [name, setName] = useState("");
+  const token = useSelector((state) => state.user.token);
+  const userId = useSelector((state) => state.user.id);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const app = useSelector((state) => {
+    return state.user.apps.filter((app) => app._id === appId);
+  });
+  const setInitialState = () => {
+    if (app.length === 0) {
+      setName("");
+      setProv([]);
+    } else {
+      setName(app[0].appName);
+      setProv(setProviders(app[0].providers));
+    }
+  };
 
   useEffect(() => {
-    const updatedProviders = setProviders(providers);
-    setProv(updatedProviders);
-    setName(appName);
-    console.log("running use effect");
+    setInitialState();
   }, [appId]);
 
   const getProviders = (prov) => {
@@ -62,22 +69,22 @@ const CreateEditCard = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedProviders = getProviders(prov);
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
+    const type = app.length === 0 ? "create" : "update";
     const method = type === "create" ? "PUT" : "PATCH";
+    console.log(type);
     const response = await fetch(`http://localhost:5000/app/${type}`, {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: method,
       body: JSON.stringify({
         userId,
-        updatedAppName: name,
-        updatedProviders,
+        appName: name,
+        providers: updatedProviders,
         appId,
       }),
     });
     const data = await response.json();
     if (response.ok) {
-      setApps(data.apps);
+      dispatch(setApps({ apps: data.apps }));
     } else {
       handleError(data.msg);
     }

@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/userSlice";
 
 export default function Navbar() {
+  const dispatch = useDispatch();
   return (
     <header className="bg-purple-100 sticky top-0">
       <div className="mx-auto flex h-16 items-center gap-8 px-4">
@@ -35,6 +38,7 @@ export default function Navbar() {
                 onClick={() => {
                   localStorage.removeItem("id");
                   localStorage.removeItem("token");
+                  dispatch(logout);
                 }}
               >
                 Logout

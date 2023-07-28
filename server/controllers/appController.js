@@ -43,14 +43,13 @@ const createApp = async (req, res) => {
 /* UPDATE */
 const updateApp = async (req, res) => {
   try {
-    console.log(req.body);
     const { userId: id, appId, updatedAppName, updatedProviders } = req.body;
     const user = await User.findByIdAndUpdate(
       id,
       {
         $set: {
-          "apps.$[elem].appName": updatedAppName,
-          "apps.$[elem].providers": updatedProviders,
+          "apps.$[elem].appName": appName,
+          "apps.$[elem].providers": providers,
         },
       },
       {
