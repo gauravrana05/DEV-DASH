@@ -8,8 +8,8 @@ module.exports = async (email, subject, text) => {
       port: 465,
       secure: true,
       auth: {
-        user: "loya_911916@student.nitw.ac.in",
-        pass: "keshav_loya",
+        user: "",
+        pass: "",
       },
     });
     await transporter.sendMail({
