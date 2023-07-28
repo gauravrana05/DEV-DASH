@@ -108,10 +108,10 @@ const CECard = ({ appId, setIsOpen }) => {
   }
 
   return (
-    <div className="relative w-auto px-10  bg-slate-800 h-auto overflow-hidden rounded-md shadow-xl sm:rounded-xl ">
-      <div className="flex justify-center w-full ">
+    <div className="  relative w-auto px-10  bg-slate-800 h-auto overflow-visible rounded-md shadow-xl sm:rounded-xl ">
+      <div className="flex justify-center w-full  overflow-visible">
         <form
-          className=" bg-slate-800 transition-all ease  shadow-[rgba(20,_35,_90,_1)_0px_30px_90px] hover:shadow-[rgba(28,_100,_140,_1)_0px_30px_90px] my-7 space-y-6 border-2 border-indigo-300 px-8 py-3 rounded-lg"
+          className=" w-80 overflow-visible bg-slate-800 transition-all ease  shadow-[rgba(20,_35,_90,_1)_0px_30px_90px] hover:shadow-[rgba(28,_100,_140,_1)_0px_30px_90px] my-7 space-y-6 border-2 border-indigo-300 px-8 py-3 rounded-lg"
           onSubmit={handleSubmit}
         >
           <h2 className="font-bold py-4 text-2xl text-slate-100">

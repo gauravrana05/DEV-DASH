@@ -48,12 +48,12 @@ export default function Dashboard() {
   const editApp = async (appId) => {
     setToUpdateAppId(appId)
     var element = document.getElementById("Heading")
-    element.scrollIntoView()
-    element.scrollIntoView({
-      behavior: "auto",
-      block: "start",
-      inline: "center",
-    })
+    // element.scrollIntoView()
+    // element.scrollIntoView({
+    //   behavior: "auto",
+    //   block: "start",
+    //   inline: "center",
+    // })
     setIsOpen(true)
   }
 
@@ -128,7 +128,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="w-full md:w-1/2 h-96">
-              <div className=" w-full  overflow-hidden rounded-md shadow-xl sm:rounded-xl ">
+              <div className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
           
                   <Transition
                   show={!isOpen}
