@@ -20,6 +20,11 @@ const userSchema = new Schema({
     type: [AppSchema],
     default: [],
   },
+  verified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 const User = mongoose.model("user", userSchema);

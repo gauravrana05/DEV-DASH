@@ -4,10 +4,11 @@ import { setApps } from "../features/userSlice";
 export default function Card({ appName, providers, appId, editApp }) {
   const token = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.id);
+  const api = process.env.REACT_APP_BASE_URL;
   const dispatch = useDispatch();
 
   const deleteApp = async () => {
-    const response = await fetch("https://dev-dash-bur4.onrender.com/app/delete", {
+    const response = await fetch(`${api}/app/delete`, {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: "DELETE",
       body: JSON.stringify({

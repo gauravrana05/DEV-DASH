@@ -19,18 +19,16 @@ export default function Dashboard() {
   let apps = useSelector((state) => state.user.apps);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const api = process.env.REACT_APP_BASE_URL;
 
   const getApps = async () => {
     try {
-      const response = await fetch(
-        `https://dev-dash-bur4.onrender.com/app/getAll/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await fetch(`${api}/app/getAll/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+      });
       const data = await response.json();
       if (!response.ok) {
         handleError(data.msg);
@@ -46,12 +44,12 @@ export default function Dashboard() {
   const editApp = async (appId) => {
     setToUpdateAppId(appId);
     var element = document.getElementById("Heading");
-    element.scrollIntoView()
+    element.scrollIntoView();
     element.scrollIntoView({
-      behavior: "auto",
+      behavior: "smooth",
       block: "start",
       inline: "center",
-    })
+    });
     setIsOpen(true);
   };
 
@@ -81,7 +79,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <section id= "Heading" className="px-2 py-24 bg-white md:px-0">
+      <section id="Heading" className="px-2 py-24 bg-white md:px-0">
         <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
           <div className="flex flex-wrap items-center sm:-mx-3">
             <div className="w-full md:w-1/2 md:px-3">
@@ -128,8 +126,8 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div  className="w-full md:w-1/2 h-96">
-              <div   className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
+            <div className="w-full md:w-1/2 h-96">
+              <div className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
                 <Transition
                   show={!isOpen}
                   enter="transition-opacity ease-in-out duration-300"

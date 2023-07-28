@@ -32,6 +32,7 @@ const CECard = ({ appId, setIsOpen }) => {
   const [name, setName] = useState("");
   const token = useSelector((state) => state.user.token);
   const userId = useSelector((state) => state.user.id);
+  const api = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const app = useSelector((state) => {
@@ -71,19 +72,16 @@ const CECard = ({ appId, setIsOpen }) => {
     const type = app.length === 0 ? "create" : "update";
     const method = type === "create" ? "PUT" : "PATCH";
     console.log(type);
-    const response = await fetch(
-      `https://dev-dash-bur4.onrender.com/app/${type}`,
-      {
-        headers: { Authorization: token, "Content-Type": "application/json" },
-        method: method,
-        body: JSON.stringify({
-          userId,
-          appName: name,
-          providers: updatedProviders,
-          appId,
-        }),
-      }
-    );
+    const response = await fetch(`${api}/app/${type}`, {
+      headers: { Authorization: token, "Content-Type": "application/json" },
+      method: method,
+      body: JSON.stringify({
+        userId,
+        appName: name,
+        providers: updatedProviders,
+        appId,
+      }),
+    });
     const data = await response.json();
     if (response.ok) {
       dispatch(setApps({ apps: data.apps }));
