@@ -3,12 +3,15 @@ const User = require("../models/User");
 /* CREATE */
 const createApp = async (req, res) => {
   try {
-    const { appName, providers, userId } = req.body;
-    console.log(appName, providers, userId);
+    const { updatedAppName, updatedProviders, userId } = req.body;
+
+    console.log(req.body);
+    console.log(updatedAppName);
     const appData = {
-      appName,
-      providers,
+      appName: updatedAppName,
+      providers: updatedProviders,
     };
+    console.log(appData);
     const updatedApps = await User.findOneAndUpdate(
       { _id: userId },
       { $push: { apps: appData } },
@@ -17,6 +20,7 @@ const createApp = async (req, res) => {
     if (!updatedApps) {
       return res.status(404).json({ msg: "User not found" });
     }
+    console.log(updatedApps);
     return res.status(200).json({
       msg: "Apps array updated successfully",
       apps: updatedApps.apps,
@@ -39,6 +43,7 @@ const createApp = async (req, res) => {
 /* UPDATE */
 const updateApp = async (req, res) => {
   try {
+    console.log(req.body);
     const { userId: id, appId, updatedAppName, updatedProviders } = req.body;
     const user = await User.findByIdAndUpdate(
       id,
