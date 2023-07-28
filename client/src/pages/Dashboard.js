@@ -10,6 +10,7 @@ import CECard from "../components/CECard.js"
 import { useDispatch, useSelector } from "react-redux"
 import { setApps } from "../features/userSlice.js"
 import {Transition} from '@headlessui/react'
+import Footer from "../components/Footer.js"
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false)
@@ -82,7 +83,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <section className="px-2 py-32 bg-white md:px-0">
+      <section className="px-2 py-24 bg-white md:px-0">
         <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
           <div className="flex flex-wrap items-center sm:-mx-3">
             <div className="w-full md:w-1/2 md:px-3">
@@ -160,17 +161,8 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
-
-      {/* <div className="mb-10">
-        <h2
-          className="mt-6 text-center text-3xl font-extrabold text-gray-900"
-          id="Heading"
-        >
-          Welcome to Dev-Dash
-        </h2>
-      </div>
-      <CreateButton isOpen={isOpen} handleCreateButton={handleCreateButton} />
-      {isOpen && <CreateEditCard setIsOpen={setIsOpen} appId={toUpdateAppId} />} */}
+      <hr className=" shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]  w-9/12 h-1 border-1 border-black m-auto"/>
+      
       {isLoading ? (
         <div className="flex justify-center ">
           <Spinner loading={isLoading} />
@@ -194,6 +186,7 @@ export default function Dashboard() {
               })}
             </div>
           )}
+          <Footer/>
         </>
       )}
     </>

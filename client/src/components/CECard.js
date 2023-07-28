@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { setApps } from "../features/userSlice"
 import { useDispatch, useSelector } from "react-redux"
 
+
 const options = [
   { value: "Google", label: "Google" },
   { value: "Spotify", label: "Spotify" },
@@ -107,7 +108,7 @@ const CECard = ({ appId, setIsOpen }) => {
   }
 
   return (
-    <div className="relative w-auto px-10 bg-[url('file:///Users/gauravrana/Downloads/topography.svg')] bg-slate-800 h-auto overflow-hidden rounded-md shadow-xl sm:rounded-xl ">
+    <div className="relative w-auto px-10  bg-slate-800 h-auto overflow-hidden rounded-md shadow-xl sm:rounded-xl ">
       <div className="flex justify-center w-full ">
         <form
           className=" bg-slate-800 transition-all ease  shadow-[rgba(20,_35,_90,_1)_0px_30px_90px] hover:shadow-[rgba(28,_100,_140,_1)_0px_30px_90px] my-7 space-y-6 border-2 border-indigo-300 px-8 py-3 rounded-lg"
