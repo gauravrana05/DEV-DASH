@@ -25,7 +25,7 @@ export default function Dashboard() {
   const getApps = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/app/getAll/${userId}`,
+        `https://dev-dash-bur4.onrender.com/app/getAll/${userId}`,
         {
           method: "GET",
           headers: {

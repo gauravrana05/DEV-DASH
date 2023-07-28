@@ -7,7 +7,7 @@ export default function Card({ appName, providers, appId, editApp }) {
   const dispatch = useDispatch();
 
   const deleteApp = async () => {
-    const response = await fetch("http://localhost:5000/app/delete", {
+    const response = await fetch("https://dev-dash-bur4.onrender.com/app/delete", {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: "DELETE",
       body: JSON.stringify({

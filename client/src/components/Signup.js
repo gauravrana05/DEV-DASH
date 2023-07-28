@@ -22,7 +22,7 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/auth/register", {
+    const response = await fetch("https://dev-dash-bur4.onrender.com/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(signupState),
@@ -39,7 +39,7 @@ export default function Signup() {
 
   const handleGoogleLogin = async (credentials) => {
     setSignupState(fieldsState);
-    const response = await fetch("http://localhost:5000/auth/googleLogin", {
+    const response = await fetch("https://dev-dash-bur4.onrender.com/auth/googleLogin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ credentials }),

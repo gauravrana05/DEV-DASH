@@ -72,7 +72,7 @@ const CreateEditCard = ({ appId, setIsOpen }) => {
     const type = app.length === 0 ? "create" : "update";
     const method = type === "create" ? "PUT" : "PATCH";
     console.log(type);
-    const response = await fetch(`http://localhost:5000/app/${type}`, {
+    const response = await fetch(`https://dev-dash-bur4.onrender.com/app/${type}`, {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: method,
       body: JSON.stringify({

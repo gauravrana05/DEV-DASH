@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react"
 import { createAppField } from "../constants/formFields"
 import Input from "./Input"
 import Select from "react-tailwindcss-select"
-import { FormAction } from "./Form"
 import { useNavigate } from "react-router-dom"
 import { setApps } from "../features/userSlice"
 import { useDispatch, useSelector } from "react-redux"
@@ -73,7 +72,7 @@ const CECard = ({ appId, setIsOpen }) => {
     const type = app.length === 0 ? "create" : "update"
     const method = type === "create" ? "PUT" : "PATCH"
     console.log(type)
-    const response = await fetch(`http://localhost:5000/app/${type}`, {
+    const response = await fetch(`https://dev-dash-bur4.onrender.com/app/${type}`, {
       headers: { Authorization: token, "Content-Type": "application/json" },
       method: method,
       body: JSON.stringify({
