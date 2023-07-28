@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/Card.js";
 import Navbar from "../components/Navbar.js";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../components/Spinner.jsx";
+import Spinner from "../components/Spinner.js";
 import CECard from "../components/CECard.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setApps } from "../features/userSlice.js";
@@ -45,13 +45,13 @@ export default function Dashboard() {
 
   const editApp = async (appId) => {
     setToUpdateAppId(appId);
-    // var element = document.getElementById("Heading");
-    // element.scrollIntoView()
-    // element.scrollIntoView({
-    //   behavior: "auto",
-    //   block: "start",
-    //   inline: "center",
-    // })
+    var element = document.getElementById("Heading");
+    element.scrollIntoView()
+    element.scrollIntoView({
+      behavior: "auto",
+      block: "start",
+      inline: "center",
+    })
     setIsOpen(true);
   };
 
@@ -81,7 +81,7 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <section className="px-2 py-24 bg-white md:px-0">
+      <section id= "Heading" className="px-2 py-24 bg-white md:px-0">
         <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
           <div className="flex flex-wrap items-center sm:-mx-3">
             <div className="w-full md:w-1/2 md:px-3">
@@ -128,8 +128,8 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="w-full md:w-1/2 h-96">
-              <div className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
+            <div  className="w-full md:w-1/2 h-96">
+              <div   className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
                 <Transition
                   show={!isOpen}
                   enter="transition-opacity ease-in-out duration-300"
@@ -139,9 +139,9 @@ export default function Dashboard() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="bg-gray-900">
+                  <div className="bg-gray-900 rounded-xl">
                     <img
-                      className=" opacity-70"
+                      className=" opacity-70 rounded-xl"
                       src="https://images.unsplash.com/photo-1498049860654-af1a5c566876?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
                       alt=""
                     />
