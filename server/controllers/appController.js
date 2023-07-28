@@ -3,13 +3,12 @@ const User = require("../models/User");
 /* CREATE */
 const createApp = async (req, res) => {
   try {
-    const { updatedAppName, updatedProviders, userId } = req.body;
+    const { appName, providers, userId } = req.body;
 
     console.log(req.body);
-    console.log(updatedAppName);
     const appData = {
-      appName: updatedAppName,
-      providers: updatedProviders,
+      appName: appName,
+      providers: providers,
     };
     console.log(appData);
     const updatedApps = await User.findOneAndUpdate(
@@ -43,7 +42,7 @@ const createApp = async (req, res) => {
 /* UPDATE */
 const updateApp = async (req, res) => {
   try {
-    const { userId: id, appId, updatedAppName, updatedProviders } = req.body;
+    const { userId: id, appId, appName, providers } = req.body;
     const user = await User.findByIdAndUpdate(
       id,
       {
