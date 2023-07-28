@@ -1,26 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react"
-import Card from "../components/Card.js"
-import Navbar from "../components/Navbar.js"
-import { Link, useNavigate } from "react-router-dom"
-import Spinner from "../components/Spinner.jsx"
-import CreateButton from "../components/CreateButton.js"
-import CreateEditCard from "../components/CreateEditCard.js"
-import CECard from "../components/CECard.js"
-import { useDispatch, useSelector } from "react-redux"
-import { setApps } from "../features/userSlice.js"
-import {Transition} from '@headlessui/react'
-import Footer from "../components/Footer.js"
+import { useEffect, useState } from "react";
+import Card from "../components/Card.js";
+import Navbar from "../components/Navbar.js";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner.jsx";
+import CECard from "../components/CECard.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setApps } from "../features/userSlice.js";
+import { Transition } from "@headlessui/react";
+import Footer from "../components/Footer.js";
 
 export default function Dashboard() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [toUpdateAppId, setToUpdateAppId] = useState("")
-  const token = useSelector((state) => state.user.token)
-  const userId = useSelector((state) => state.user.id)
-  let apps = useSelector((state) => state.user.apps)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [toUpdateAppId, setToUpdateAppId] = useState("");
+  const token = useSelector((state) => state.user.token);
+  const userId = useSelector((state) => state.user.id);
+  let apps = useSelector((state) => state.user.apps);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const getApps = async () => {
     try {
@@ -32,53 +30,53 @@ export default function Dashboard() {
             Authorization: token,
           },
         }
-      )
-      const data = await response.json()
+      );
+      const data = await response.json();
       if (!response.ok) {
-        handleError(data.msg)
+        handleError(data.msg);
       } else {
-        dispatch(setApps({ apps: data.apps }))
+        dispatch(setApps({ apps: data.apps }));
       }
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
-      console.log("from dashboard", error)
+      console.log("from dashboard", error);
     }
-  }
+  };
 
   const editApp = async (appId) => {
-    setToUpdateAppId(appId)
-    var element = document.getElementById("Heading")
+    setToUpdateAppId(appId);
+    // var element = document.getElementById("Heading");
     // element.scrollIntoView()
     // element.scrollIntoView({
     //   behavior: "auto",
     //   block: "start",
     //   inline: "center",
     // })
-    setIsOpen(true)
-  }
+    setIsOpen(true);
+  };
 
   const handleError = (errorMsg) => {
     //TO-DO: Add alert with data.msg
     if (errorMsg === "Invalid Token" || "Access  Denied" || "Token Expired") {
-      console.log("reached here because of", errorMsg)
-      navigate("/login")
+      console.log("reached here because of", errorMsg);
+      navigate("/login");
     }
-  }
+  };
 
   const handleCreateButton = () => {
-    setToUpdateAppId("")
-    setIsOpen((current) => !current)
-  }
+    setToUpdateAppId("");
+    setIsOpen((current) => !current);
+  };
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (!token || token.size === 0) {
-      console.log("navigating because of this")
-      navigate("/login")
+      console.log("navigating because of this");
+      navigate("/login");
     } else {
-      getApps()
+      getApps();
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -89,14 +87,17 @@ export default function Dashboard() {
             <div className="w-full md:w-1/2 md:px-3">
               <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
                 <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
-                  <span className=" pb-2 block xl:inline">Bring your Data </span>
+                  <span className=" pb-2 block xl:inline">
+                    Bring your Data{" "}
+                  </span>
                   <span className="block text-indigo-600 xl:inline">
-                      and Make Sense of It.
+                    and Make Sense of It.
                   </span>
                 </h1>
                 <p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-                  <strong className="text-black">DevDash.</strong> provides you an all in one display of all your applications.
-                  Bring all your apps and showcase them with us.
+                  <strong className="text-black">DevDash.</strong> provides you
+                  an all in one display of all your applications. Bring all your
+                  apps and showcase them with us.
                 </p>
                 <div className="relative flex justify-center sm:justify-normal sm:space-x-4">
                   <button
@@ -129,8 +130,7 @@ export default function Dashboard() {
             </div>
             <div className="w-full md:w-1/2 h-96">
               <div className=" w-full  overflow-visible rounded-md shadow-xl sm:rounded-xl ">
-          
-                  <Transition
+                <Transition
                   show={!isOpen}
                   enter="transition-opacity ease-in-out duration-300"
                   enterFrom="opacity-0"
@@ -140,8 +140,11 @@ export default function Dashboard() {
                   leaveTo="opacity-0"
                 >
                   <div className="bg-gray-900">
-
-                  <img className=" opacity-70" src="https://images.unsplash.com/photo-1498049860654-af1a5c566876?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="" />
+                    <img
+                      className=" opacity-70"
+                      src="https://images.unsplash.com/photo-1498049860654-af1a5c566876?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
+                      alt=""
+                    />
                   </div>
                 </Transition>
                 <Transition
@@ -153,16 +156,15 @@ export default function Dashboard() {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-
-                 <CECard setIsOpen={setIsOpen} appId={toUpdateAppId} />  
+                  <CECard setIsOpen={setIsOpen} appId={toUpdateAppId} />
                 </Transition>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <hr className=" shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]  w-9/12 h-1 border-1 border-black m-auto"/>
-      
+      <hr className=" shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]  w-9/12 h-1 border-1 border-black m-auto" />
+
       {isLoading ? (
         <div className="flex justify-center ">
           <Spinner loading={isLoading} />
@@ -182,13 +184,13 @@ export default function Dashboard() {
                     providers={app.providers}
                     editApp={editApp}
                   />
-                )
+                );
               })}
             </div>
           )}
-          <Footer/>
+          <Footer />
         </>
       )}
     </>
-  )
+  );
 }
