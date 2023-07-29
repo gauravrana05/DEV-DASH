@@ -46,10 +46,8 @@ const register = async (req, res) => {
 /* VERIFY TOKEN */
 const verifyToken = async (req, res) => {
   try {
-    console.log("reached here");
     const { userId, token } = req.params;
-    const user = await user.findOne({ _id: userId });
-    console.log(user);
+    const user = await User.findOne({ _id: userId });
     if (!user) return res.status(400).json({ msg: "User Not found" });
 
     const isTokenValid = await Token.findOne({ userId, token });
@@ -57,15 +55,15 @@ const verifyToken = async (req, res) => {
 
     user.verified = true;
     await user.save();
-    await isTokenValid.remove();
+    await Token.deleteOne({ userId, token });
 
-    const jwtToken = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "12h",
     });
 
     return res.status(201).json({
-      id: savedUser._id,
-      name: savedUser.name,
+      id: user._id,
+      name: user.name,
       token: jwtToken,
       msg: "User registered successfully",
     });
