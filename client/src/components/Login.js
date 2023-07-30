@@ -88,15 +88,14 @@ export default function Login() {
           ))}
         </div>
         <FormExtra setRemember={setRemember} />
-        <FormAction handleSubmit={handleSubmit} text="Login" />
+        <FormAction text="Login" />
       </form>
 
       <div className="flex justify-center items-center py-4">
         <GoogleLogin
           text="continue_with"
           width="100%"
-          shape="l"
-          pil
+          shape="pill"
           onSuccess={(credentialResponse) =>
             handleGoogleLogin(credentialResponse.credential)
           }

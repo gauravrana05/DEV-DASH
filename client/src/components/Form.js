@@ -1,18 +1,20 @@
 import { Link } from "react-router-dom";
 
 export function FormAction({
-  onSubmit,
   type = "Button",
   action = "submit",
   text,
+  disabled = false,
 }) {
   return (
     <>
       {type === "Button" ? (
         <button
           type={action}
-          className="group relative w-52 m-auto rounded-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium  text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mt-10"
-          onSubmit={onSubmit}
+          disabled={disabled}
+          className={
+            "group relative w-52 m-auto rounded-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium  text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mt-10 disabled:cursor-not-allowed"
+          }
         >
           {text}
         </button>
@@ -44,7 +46,7 @@ export function FormExtra({ setRemember }) {
 
       <div className="text-sm">
         <Link
-          to={"#"}
+          to={"/forgot-password"}
           className="font-medium text-purple-600 hover:text-purple-500"
         >
           Forgot your password?

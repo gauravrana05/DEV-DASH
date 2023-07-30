@@ -75,4 +75,15 @@ const createAppField = {
   placeholder: "App Name",
 };
 
-export { loginFields, signupFields, createAppField };
+const resetPasswordFields = {
+  labelText: "Email address",
+  labelFor: "email-address",
+  id: "email",
+  name: "email",
+  type: "email",
+  autoComplete: "email",
+  isRequired: true,
+  placeholder: "Email address",
+};
+
+export { loginFields, signupFields, createAppField, resetPasswordFields };

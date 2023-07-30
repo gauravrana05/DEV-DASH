@@ -1,5 +1,5 @@
-import Header from "../components/Header"
-import Login from "../components/Login"
+import Header from "../components/Header";
+import Login from "../components/Login";
 
 export default function LoginPage() {
   return (
@@ -12,9 +12,8 @@ export default function LoginPage() {
           linkUrl="/signup"
         />
 
-        
         <Login />
       </div>
     </div>
-  )
+  );
 }

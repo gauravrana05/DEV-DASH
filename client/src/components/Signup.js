@@ -87,7 +87,7 @@ export default function Signup() {
                   placeholder={field.placeholder}
                 />
               ))}
-              <FormAction handleSubmit={handleSubmit} text="Signup" />
+              <FormAction text="Signup" />
             </div>
           </form>
           <div className="flex justify-center items-center py-4">
