@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Input from "../components/Input";
-import { resetPasswordFields } from "../constants/formFields";
+import { forgotPasswordFields } from "../constants/formFields";
 import axios from "axios";
 import { FormAction } from "../components/Form";
+import ResetPassword from "../components/ResetPassword";
 
 const ForgotPassword = () => {
   const api = process.env.REACT_APP_BASE_URL;
@@ -13,6 +14,8 @@ const ForgotPassword = () => {
   const [timerCount, setTimerCount] = useState(60);
   const [otpValues, setOtpValues] = useState(["", "", "", ""]);
   const [resendOtpDisable, setResendOtpDisable] = useState(true);
+  const [otpVerified, setOtpVerified] = useState(false);
+
   const otpFieldsRef = useRef([]);
 
   const handleOTPChange = (e, index) => {
@@ -52,8 +55,9 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setOtpButton(true);
     setTimerCount(60);
+    console.log("setting timer count to ", timerCount);
+    setOtpButton(true);
     await sendOTP();
   };
 
@@ -82,6 +86,7 @@ const ForgotPassword = () => {
           OTP: otp,
         });
         console.log(response.data);
+        setOtpVerified(true);
       } catch (error) {
         setVerifyButton(false);
         handleError(error);
@@ -106,24 +111,28 @@ const ForgotPassword = () => {
     <div>
       <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md space-y-8 p-9 w-96 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]">
-          <Header heading="Forgot password" />
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div>Please enter your email to reset your password.</div>
-            <Input
-              handleChange={(e) => setEmail(e.target.value)}
-              labelText={resetPasswordFields.labelText}
-              labelFor={resetPasswordFields.labelFor}
-              value={email}
-              id={resetPasswordFields.id}
-              name={resetPasswordFields.name}
-              type={resetPasswordFields.type}
-              isRequired={resetPasswordFields.isRequired}
-              placeholder={resetPasswordFields.placeholder}
-              disabled={otpButton}
-            />
-            <FormAction text="Send OTP" disabled={otpButton} />
-          </form>
-          {otpButton && (
+          <Header
+            heading={otpVerified ? "Reset Password" : "Forgot password"}
+          />
+          {!otpButton && (
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <div>Please enter your email to reset your password.</div>
+              <Input
+                handleChange={(e) => setEmail(e.target.value)}
+                labelText={forgotPasswordFields.labelText}
+                labelFor={forgotPasswordFields.labelFor}
+                value={email}
+                id={forgotPasswordFields.id}
+                name={forgotPasswordFields.name}
+                type={forgotPasswordFields.type}
+                isRequired={forgotPasswordFields.isRequired}
+                placeholder={forgotPasswordFields.placeholder}
+                disabled={otpButton}
+              />
+              <FormAction text="Send OTP" disabled={otpButton} />
+            </form>
+          )}
+          {otpButton && !otpVerified && (
             <div>
               <form onSubmit={verfiyOTP}>
                 <div className="flex flex-col space-y-16">
@@ -174,6 +183,7 @@ const ForgotPassword = () => {
               </form>
             </div>
           )}
+          {otpVerified && <ResetPassword email={email} />}
         </div>
       </div>
     </div>

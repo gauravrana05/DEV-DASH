@@ -6,6 +6,8 @@ const {
   resetPassword,
   googleLogin,
   verifyToken,
+  resetMail,
+  verifyOtp,
 } = require("../controllers/authController");
 
 const router = express.Router();
@@ -14,6 +16,8 @@ const router = express.Router();
 router.post("/login", login);
 router.post("/register", register);
 router.post("/googleLogin", googleLogin);
+router.post("/reset", resetMail);
+router.post("/verifyotp", verifyOtp);
 router.patch("/resetPassword", resetPassword);
 router.get("/:userId/verify/:token", verifyToken);
 

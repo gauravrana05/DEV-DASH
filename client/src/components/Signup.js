@@ -35,8 +35,6 @@ export default function Signup() {
     const data = await response.json();
     if (response.ok) {
       console.log(data);
-      // dispatch(login({ token: data.token, id: data.id }));
-      // navigate("/");
     } else {
       handleError(data.msg);
     }

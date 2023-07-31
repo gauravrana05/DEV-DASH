@@ -7,12 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../features/userSlice";
 
-const fields = loginFields;
-let fieldsState = {};
-
-fields.forEach((field) => (fieldsState[field.id] = ""));
-
 export default function Login() {
+  const fields = loginFields;
+  let fieldsState = {};
+  fields.forEach((field) => (fieldsState[field.id] = ""));
+
   const [loginState, setLoginState] = useState(fieldsState);
   const [remember, setRemember] = useState(false);
   const dispatch = useDispatch();

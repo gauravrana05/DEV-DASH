@@ -75,7 +75,7 @@ const createAppField = {
   placeholder: "App Name",
 };
 
-const resetPasswordFields = {
+const forgotPasswordFields = {
   labelText: "Email address",
   labelFor: "email-address",
   id: "email",
@@ -86,4 +86,4 @@ const resetPasswordFields = {
   placeholder: "Email address",
 };
 
-export { loginFields, signupFields, createAppField, resetPasswordFields };
+export { loginFields, signupFields, createAppField, forgotPasswordFields };

@@ -15,7 +15,7 @@ const tokenSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-    expires: 3600,
+    expires: 3600, // Expire after 1 minute (60 seconds)
   },
 });
 

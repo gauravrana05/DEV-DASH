@@ -7,6 +7,8 @@ const jwtDecode = require("jwt-decode");
 const random = require("random-string-generator");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const htmlBody = require("../utils/resetPasswordhtml");
+const otp = require("../models/OTP");
 
 /* REGISTER */
 const register = async (req, res) => {
@@ -153,6 +155,55 @@ const googleLogin = async (req, res) => {
   }
 };
 
+/* VERIFY EMAIL AND SEND OTP */
+const resetMail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User does not exist." });
+    }
+    const OTP = random((length = 4), (type = "numeric"));
+    const newOTP = await new otp({
+      userId: user._id,
+      otp: OTP,
+    }).save();
+    const html = htmlBody(OTP);
+    await sendEmail(email, "Reset Password OTP", "", html);
+    res.status(201).json({ msg: "Email Sent" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: error });
+  }
+};
+
+/* VERIFY OTP */
+const verifyOtp = async (req, res) => {
+  try {
+    const { OTP, email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User does not exist." });
+    }
+    const verifyUserOtp = await otp.findOne({ otp: OTP, userId: user._id });
+    if (!verifyUserOtp) {
+      return res.status(400).json({ msg: "Invalid OTP." });
+    }
+    const currentTime = new Date();
+    const createdAtTime = new Date(verifyUserOtp.createdAt);
+    const fiveMinutesAgo = new Date(currentTime.getTime() - 5 * 60 * 1000);
+    if (createdAtTime < fiveMinutesAgo) {
+      await otp.deleteOne({ _id: verifyUserOtp._id });
+      return res.status(400).json({ msg: "OTP expired" });
+    }
+    await otp.findOneAndDelete({ userId: user._id });
+
+    res.status(201).json({ msg: "User Verified" });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
+};
+
 /* RESET PASSWORD */
 const resetPassword = async (req, res) => {
   try {
@@ -174,4 +225,12 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { resetPassword, login, register, googleLogin, verifyToken };
+module.exports = {
+  resetPassword,
+  login,
+  register,
+  googleLogin,
+  verifyToken,
+  resetMail,
+  verifyOtp,
+};
