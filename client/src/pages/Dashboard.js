@@ -6,40 +6,19 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner.js";
 import CECard from "../components/CECard.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setApps } from "../features/userSlice.js";
 import { Transition } from "@headlessui/react";
 import Footer from "../components/Footer.js";
+import { getAppsUtil } from "../utils/utils.js";
+import { ArrowIcon } from "../utils/Icons.js";
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [toUpdateAppId, setToUpdateAppId] = useState("");
   const token = useSelector((state) => state.user.token);
-  const userId = useSelector((state) => state.user.id);
   let apps = useSelector((state) => state.user.apps);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const api = process.env.REACT_APP_BASE_URL;
-
-  const getApps = async () => {
-    try {
-      const response = await fetch(`${api}/app/getAll/${userId}`, {
-        method: "GET",
-        headers: {
-          Authorization: token,
-        },
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        handleError(data.msg);
-      } else {
-        dispatch(setApps({ apps: data.apps }));
-      }
-      setIsLoading(false);
-    } catch (error) {
-      console.log("from dashboard", error);
-    }
-  };
 
   const editApp = async (appId) => {
     setToUpdateAppId(appId);
@@ -53,14 +32,6 @@ export default function Dashboard() {
     setIsOpen(true);
   };
 
-  const handleError = (errorMsg) => {
-    //TO-DO: Add alert with data.msg
-    if (errorMsg === "Invalid Token" || "Access  Denied" || "Token Expired") {
-      console.log("reached here because of", errorMsg);
-      navigate("/login");
-    }
-  };
-
   const handleCreateButton = () => {
     setToUpdateAppId("");
     setIsOpen((current) => !current);
@@ -72,7 +43,7 @@ export default function Dashboard() {
       console.log("navigating because of this");
       navigate("/login");
     } else {
-      getApps();
+      getAppsUtil(token, dispatch).then(setIsLoading(false));
     }
   }, []);
 
@@ -104,20 +75,7 @@ export default function Dashboard() {
                   >
                     <span className="absolute left-0 block w-full h-0 transition-all bg-indigo-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
                     <span className="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        ></path>
-                      </svg>
+                      <ArrowIcon />
                     </span>
                     <span className="relative">
                       {isOpen ? "Close" : "Create"} Application

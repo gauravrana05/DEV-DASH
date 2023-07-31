@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { logout } from "../features/userSlice"
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/userSlice";
 
 export default function Navbar() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   return (
     <header className="bg-purple-100 sticky top-0 z-50">
       <section className="w-full px-8 text-gray-700 bg-white">
@@ -20,31 +20,30 @@ export default function Navbar() {
             <nav className="flex flex-wrap items-center mb-5 text-base md:mb-0 md:pl-8 md:ml-8 md:border-l md:border-gray-200">
               <Link
                 href="#_"
-                class="mr-5 text-xl font-bold leading-6 text-gray-500 hover:text-gray-900"
+                className="mr-5 text-xl font-bold leading-6 text-gray-500 hover:text-gray-900"
               >
                 Home
               </Link>
-              <Link  className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">Features</Link>
-                <Link className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">About</Link>
-                <Link className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">Contact</Link>
-             
+              <Link className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">
+                Features
+              </Link>
+              <Link className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">
+                About
+              </Link>
+              <Link className="mr-5 cursor-not-allowed font-medium leading-6 text-gray-600">
+                Contact
+              </Link>
             </nav>
           </div>
 
-          <div class="inline-flex items-center ml-5 space-x-6 lg:justify-end">
-            <Link
-              to = "#"
-              class="text-base font-medium leading-6 text-gray-600 whitespace-no-wrap transition duration-150 ease-in-out hover:text-gray-900"
-            >
-              Login
-            </Link>
+          <div className="inline-flex items-center ml-5 space-x-6 lg:justify-end">
             <Link
               to="/login"
-              class="inline-flex items-center justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              className="inline-flex items-center justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
               onClick={() => {
-                localStorage.removeItem("id")
-                localStorage.removeItem("token")
-                dispatch(logout)
+                localStorage.removeItem("id");
+                localStorage.removeItem("token");
+                dispatch(logout);
               }}
             >
               Logout
@@ -94,5 +93,5 @@ export default function Navbar() {
         </div>
       </div> */}
     </header>
-  )
+  );
 }

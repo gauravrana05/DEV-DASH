@@ -5,7 +5,7 @@ import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../features/userSlice";
+import { handeLoginRegister, handleGoogleLoginUtils } from "../utils/utils";
 
 export default function Login() {
   const fields = loginFields;
@@ -16,7 +16,6 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const api = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -24,42 +23,13 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(api);
-    const response = await fetch(`${api}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(loginState),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      dispatch(login(data));
-      if (remember) {
-        localStorage.setItem("id", data.id);
-        localStorage.setItem("token", data.token);
-      }
-      navigate("/");
-    } else {
-      handleError(data.msg);
-    }
+    await handeLoginRegister(loginState, "login", dispatch, navigate, remember);
     setLoginState(fieldsState);
   };
 
   const handleGoogleLogin = async (credentials) => {
     setLoginState(fieldsState);
-
-    const response = await fetch(`${api}/auth/googleLogin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ credentials }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      dispatch(login(data));
-      navigate("/");
-    } else {
-      handleError(data.msg);
-    }
+    await handleGoogleLoginUtils(credentials, dispatch, navigate);
   };
 
   const handleError = (errorMsg) => {

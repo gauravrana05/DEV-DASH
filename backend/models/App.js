@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-
+const mongoose = require("mongoose");
 
 const providerEnum = [
   "Google",
@@ -14,15 +13,14 @@ const providerEnum = [
   "Bybit",
 ];
 
-
 const AppSchema = new mongoose.Schema(
   {
     appName: {
       type: String,
-      required: [true, 'Please provide company name'],
+      required: [true, "Please provide company name"],
       maxlength: 50,
     },
-    pvoviders: {
+    providers: {
       type: [String],
       enum: {
         values: providerEnum,
@@ -31,11 +29,11 @@ const AppSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Please provide user'],
+      ref: "User",
+      required: [true, "Please provide user"],
     },
   },
   { timestamps: true }
-)
+);
 
-module.exports = mongoose.model('App', AppSchema)
+module.exports = mongoose.model("App", AppSchema);

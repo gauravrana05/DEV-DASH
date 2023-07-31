@@ -5,8 +5,9 @@ import Input from "./Input";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../features/userSlice";
 import Spinner from "./Spinner";
+import { handleGoogleLoginUtils } from "../utils/utils";
+import { handeLoginRegister } from "../utils/utils";
 
 const fields = signupFields;
 let fieldsState = {};
@@ -18,44 +19,33 @@ export default function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const api = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    const response = await fetch(`${api}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(signupState),
-    });
-    console.log(response);
-    const data = await response.json();
-    if (response.ok) {
-      console.log(data);
-    } else {
-      handleError(data.msg);
+    if (signupState["password"] !== signupState["confirm-password"]) {
+      console.log("password not matching");
+      return;
     }
+    setIsLoading(true);
+    const body = {
+      name: signupState["fullName"],
+      email: signupState["email"],
+      password: signupState["password"],
+    };
+    const data = await handeLoginRegister(body, "register", dispatch, navigate);
+    console.log(data);
     setIsLoading(false);
     setSignupState(fieldsState);
   };
 
   const handleGoogleLogin = async (credentials) => {
     setSignupState(fieldsState);
-    const response = await fetch(`${api}/auth/googleLogin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ credentials }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      dispatch(login({ token: data.token, id: data.id }));
-      navigate("/");
-    } else {
-      handleError(data.msg);
-    }
+    setIsLoading(true);
+    await handleGoogleLoginUtils(credentials, dispatch, navigate);
+    setIsLoading(false);
   };
 
   const handleError = (errorMsg) => {

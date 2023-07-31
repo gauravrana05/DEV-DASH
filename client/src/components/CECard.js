@@ -4,23 +4,13 @@ import { createAppField } from "../constants/formFields";
 import Input from "./Input";
 import Select from "react-tailwindcss-select";
 import { useNavigate } from "react-router-dom";
-import { setApps } from "../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-const options = [
-  { value: "Google", label: "Google" },
-  { value: "Spotify", label: "Spotify" },
-  { value: "Quora", label: "Quora" },
-  { value: "Binance", label: "Binance" },
-  { value: "Twitter", label: "Twitter" },
-  { value: "Instagram", label: "Instagram" },
-  { value: "Tinder", label: "Tinder" },
-  { value: "Bumble", label: "Bumble" },
-  { value: "Bybit", label: "Bybit" },
-  { value: "Facebook", label: "Facebook" },
-];
+import { providerOptions } from "../constants/providerOptions";
+import { createUpdateAppUtil } from "../utils/utils";
 
 const CECard = ({ appId, setIsOpen }) => {
+  const options = providerOptions;
+
   const setProviders = (providers) => {
     const updatedProviders = options.filter((option) => {
       return providers.includes(option.value);
@@ -28,11 +18,15 @@ const CECard = ({ appId, setIsOpen }) => {
     return updatedProviders;
   };
 
+  const getProviders = (prov) => {
+    return prov.map((provider) => {
+      return provider.value;
+    });
+  };
+
   const [prov, setProv] = useState([]);
   const [name, setName] = useState("");
   const token = useSelector((state) => state.user.token);
-  const userId = useSelector((state) => state.user.id);
-  const api = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const app = useSelector((state) => {
@@ -52,51 +46,21 @@ const CECard = ({ appId, setIsOpen }) => {
     setInitialState();
   }, [appId]);
 
-  const getProviders = (prov) => {
-    return prov.map((provider) => {
-      return provider.value;
-    });
-  };
-
-  const handleSelectChange = (value) => {
-    setProv(value);
-  };
-
-  const handleInputChange = (e) => {
-    setName(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedProviders = getProviders(prov);
     const type = app.length === 0 ? "create" : "update";
-    const method = type === "create" ? "PUT" : "PATCH";
-    console.log(type);
-    const response = await fetch(`${api}/app/${type}`, {
-      headers: { Authorization: token, "Content-Type": "application/json" },
-      method: method,
-      body: JSON.stringify({
-        userId,
-        appName: name,
-        providers: updatedProviders,
-        appId,
-      }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      dispatch(setApps({ apps: data.apps }));
-    } else {
-      handleError(data.msg);
-    }
+    await createUpdateAppUtil(
+      type,
+      { appName: name, providers: updatedProviders },
+      token,
+      appId,
+      dispatch,
+      navigate
+    );
     setName("");
     setProv(null);
-    navigate("/");
     setIsOpen(false);
-  };
-
-  const handleError = (errorMsg) => {
-    console.log("From create card", errorMsg);
-    //TO-DO: Add alert with data.msg
   };
 
   return (
@@ -112,7 +76,7 @@ const CECard = ({ appId, setIsOpen }) => {
           <div className=" text-white">
             <Input
               key={createAppField.id}
-              handleChange={handleInputChange}
+              handleChange={(e) => setName(e.target.value)}
               labelText={createAppField.labelText}
               labelFor={createAppField.labelFor}
               value={name}
@@ -128,7 +92,7 @@ const CECard = ({ appId, setIsOpen }) => {
             <Select
               value={prov}
               isMultiple
-              onChange={handleSelectChange}
+              onChange={(value) => setProv(value)}
               options={options}
             />
           </div>
