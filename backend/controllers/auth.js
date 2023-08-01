@@ -38,7 +38,10 @@ const login = async (req, res) => {
 /* GOOGLE LOGIN */
 const googleLogin = async (req, res) => {
   const { credentials } = req.body;
-  const { email, name } = await jwtDecode(credentials);
+
+  const tatoo = await jwtDecode(credentials);
+  console.log(tatoo);
+  const { email, name } = tatoo;
 
   let user = await User.findOne({ email: email });
 

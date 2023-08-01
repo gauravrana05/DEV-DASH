@@ -6,6 +6,7 @@ import {
   setApps,
   updateApp,
 } from "../features/userSlice";
+import { toast } from "react-toastify";
 
 export const api = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -17,6 +18,7 @@ export const handleGoogleLoginUtils = async (
   navigate
 ) => {
   try {
+    console.log(credentials);
     const { data } = await api.post("/auth/googleLogin", { credentials });
     console.log(data);
     dispatch(login(data));
@@ -36,7 +38,12 @@ export const handeLoginRegister = async (
   remember = false
 ) => {
   try {
-    const { data } = await api.post(`/auth/${type}`, { ...body });
+    const { data } = await toast.promise( api.post(`/auth/${type}`, { ...body }), {
+        pending: "Logging In",
+        success: "Login Successful",
+        error: "Unsuccessful Login Attempt"
+      })
+    // const { data } = await api.post(`/auth/${type}`, { ...body });
     if (type === "register") {
       navigate("/login");
     } else if (type === "login") {

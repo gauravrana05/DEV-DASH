@@ -7,11 +7,24 @@ import store from "./app/store";
 import { Provider } from "react-redux";
 import Emailverify from "./pages/Emailverify";
 import ForgotPassword from "./pages/ForgotPassword";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+
+// import the library
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+// import your icons
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+
+
 
 function App() {
   const GoogleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   return (
     <div>
+
       <Provider store={store}>
         <BrowserRouter>
           <GoogleOAuthProvider clientId={GoogleClientId}>
@@ -25,8 +38,20 @@ function App() {
           </GoogleOAuthProvider>
         </BrowserRouter>
       </Provider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }
 
 export default App;
+library.add(fab, fas, far);
