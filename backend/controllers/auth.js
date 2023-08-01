@@ -3,17 +3,24 @@ const User = require("../models/User");
 const otp = require("../models/OTP");
 const bcrypt = require("bcrypt");
 const random = require("random-string-generator");
-const htmlBody = require("../utils/resetPasswordhtml");
-const sendEmail = require("../utils/sendEmail");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
+const { sendOtpmail } = require("../utils/utils");
 
 const register = async (req, res) => {
+  const email = req.body.email;
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    //throw new error of user already registered
+    return res.status(400).json({ msg: "User already exists" });
+  }
   const salt = await bcrypt.genSalt(10);
   req.body.password = await bcrypt.hash(req.body.password, salt);
   const user = await User.create({ ...req.body });
-  const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
+  await sendOtpmail(email, user._id, "register");
+  res.status(201).json({ msg: "Email Sent" });
+  // const token = user.createJWT();
+  // res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
 };
 
 const login = async (req, res) => {
@@ -25,6 +32,10 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
+  }
+  if (!user.verified) {
+    // throw new user not verified error
+    res.status(400).json({ msg: "User not verified" });
   }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
@@ -39,9 +50,7 @@ const login = async (req, res) => {
 const googleLogin = async (req, res) => {
   const { credentials } = req.body;
 
-  const tatoo = await jwtDecode(credentials);
-  console.log(tatoo);
-  const { email, name } = tatoo;
+  const { email, name } = await jwtDecode(credentials);
 
   let user = await User.findOne({ email: email });
 
@@ -49,7 +58,7 @@ const googleLogin = async (req, res) => {
     const password = random((length = 16), (type = "alphanumeric"));
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
-    user = await User.create({ email, name, password });
+    user = await User.create({ email, name, password: hashPassword });
   }
 
   const token = user.createJWT();
@@ -58,16 +67,15 @@ const googleLogin = async (req, res) => {
 };
 
 /* VERIFY EMAIL AND SEND OTP */
-const resetMail = async (req, res) => {
+const resetPasswordMail = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  const OTP = random((length = 4), (type = "numeric"));
-  await otp.create({ userId: user._id, otp: OTP });
-  const html = htmlBody(OTP);
-  await sendEmail(email, "Reset Password OTP", "", html);
+  console.log("reached here");
+  await sendOtpmail(email, user._id, "resetPassword");
+  console.log("mail sent");
   res.status(201).json({ msg: "Email Sent" });
 };
 
@@ -80,8 +88,8 @@ const verifyOtp = async (req, res) => {
   }
   const verifyUserOtp = await otp.findOne({ otp: OTP, userId: user._id });
   if (!verifyUserOtp) {
-    // make new eeror for invalid otp
-    // return res.status(400).json({ msg: "Invalid OTP." });
+    // make new error for invalid otp
+    return res.status(400).json({ msg: "Invalid OTP." });
   }
   const currentTime = new Date();
   const createdAtTime = new Date(verifyUserOtp.createdAt);
@@ -89,6 +97,10 @@ const verifyOtp = async (req, res) => {
   if (createdAtTime < fiveMinutesAgo) {
     await otp.deleteOne({ _id: verifyUserOtp._id });
     return res.status(400).json({ msg: "OTP expired" });
+  }
+  if (verifyUserOtp.type === "register") {
+    user.verified = true;
+    await user.save();
   }
   await otp.findOneAndDelete({ userId: user._id });
 
@@ -118,5 +130,5 @@ module.exports = {
   googleLogin,
   verifyOtp,
   resetPassword,
-  resetMail,
+  resetPasswordMail,
 };

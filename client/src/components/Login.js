@@ -1,57 +1,57 @@
-import { useState } from "react"
-import { loginFields } from "../constants/formFields"
-import { FormAction, FormExtra } from "./Form"
-import Input from "./Input"
-import { GoogleLogin } from "@react-oauth/google"
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { handeLoginRegister, handleGoogleLoginUtils } from "../utils/utils"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useGoogleLogin } from "@react-oauth/google"
-import { toast } from "react-toastify"
+import { useState } from "react";
+import { loginFields } from "../constants/formFields";
+import { FormAction, FormExtra } from "./Form";
+import Input from "./Input";
+import { GoogleLogin } from "@react-oauth/google";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { handleLogin, handleGoogleLoginUtils } from "../utils/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useGoogleLogin } from "@react-oauth/google";
+import { toast } from "react-toastify";
 
 export default function Login() {
   let fieldsState = {
     email: "",
     password: "",
-  }
+  };
 
-  const [loginState, setLoginState] = useState(fieldsState)
-  const [remember, setRemember] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [loginState, setLoginState] = useState(fieldsState);
+  const [remember, setRemember] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const login = useGoogleLogin({
     onSuccess: (credentialResponse) => {
-      console.log(credentialResponse)
+      console.log(credentialResponse);
       handleGoogleLoginUtils(
         credentialResponse.access_token,
         dispatch,
         navigate
-      )
+      );
     },
     onError: () => toast("Login failed"),
     flow: "auth-code",
-  })
+  });
   const handleChange = (e) => {
-    setLoginState({ ...loginState, [e.target.id]: e.target.value })
-  }
+    setLoginState({ ...loginState, [e.target.id]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    await handeLoginRegister(loginState, "login", dispatch, navigate, remember)
-    setLoginState(fieldsState)
-  }
+    e.preventDefault();
+    await handleLogin(loginState, dispatch, navigate, remember);
+    setLoginState(fieldsState);
+  };
 
   const handleGoogleLogin = async (credentials) => {
-    setLoginState(fieldsState)
-    await handleGoogleLoginUtils(credentials, dispatch, navigate)
-  }
+    setLoginState(fieldsState);
+    await handleGoogleLoginUtils(credentials, dispatch, navigate);
+  };
 
   const handleError = (errorMsg) => {
-    console.log("From Login", errorMsg)
+    console.log("From Login", errorMsg);
     //TO-DO: Add alert with data.msg
-  }
+  };
 
   return (
     // <div>
@@ -139,22 +139,22 @@ export default function Login() {
             </div>
             <div className="flex items-center justify-around mt-6">
               {/* <div className="w-14 h-14 text-center rounded-full  bg-sky-700 text-white saturate-100 transition-all hover:bg-sky-800"> */}
-                {/* <button onClick={login}>
+              {/* <button onClick={login}>
                   <Link className="block mt-4">
                     <FontAwesomeIcon icon="fab fa-google fa-lg" />
                   </Link>
                 </button> */}
-                {/* </div> */}
+              {/* </div> */}
               <GoogleLogin
                 size="large"
                 type="icon"
                 shape="circle"
-                onSuccess={(credentialResponse) =>{
+                onSuccess={(credentialResponse) => {
                   console.log(credentialResponse, " This is the response");
-                  handleGoogleLogin(credentialResponse.credential)}
-                }
+                  handleGoogleLogin(credentialResponse.credential);
+                }}
                 onError={() => handleError("Login failed")}
-                />
+              />
             </div>
             <div className="flex items-center justify-center space-x-2 py-4">
               <span className="h-px bg-gray-400 w-14"></span>
@@ -177,7 +177,7 @@ export default function Login() {
                   placeholder="willPig@tailwind.com"
                 />
                 <label
-                  for="email"
+                  htmlFor="email"
                   className=" absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Email
@@ -195,7 +195,7 @@ export default function Login() {
                   placeholder="Password"
                 />
                 <label
-                  for="password"
+                  htmlFor="password"
                   className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Password
@@ -241,5 +241,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }

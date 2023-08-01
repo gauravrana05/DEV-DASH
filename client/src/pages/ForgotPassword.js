@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import Input from "../components/Input";
 import { forgotPasswordFields } from "../constants/formFields";
-import axios from "axios";
 import { FormAction } from "../components/Form";
 import ResetPassword from "../components/ResetPassword";
+import { sendOTP, verifyOtpUtils } from "../utils/utils";
 
 const ForgotPassword = () => {
-  const api = process.env.REACT_APP_BASE_URL;
   const [email, setEmail] = useState("");
   const [otpButton, setOtpButton] = useState(false);
   const [verifyButton, setVerifyButton] = useState(false);
@@ -41,28 +40,16 @@ const ForgotPassword = () => {
     }
   };
 
-  const sendOTP = async () => {
-    try {
-      await axios.post(`${api}/auth/reset`, {
-        email: email,
-      });
-    } catch (error) {
-      handleError(error);
-      setOtpButton(false);
-      setEmail("");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTimerCount(60);
     console.log("setting timer count to ", timerCount);
     setOtpButton(true);
-    await sendOTP();
-  };
-
-  const handleError = (error) => {
-    console.log(error);
+    const response = await sendOTP(email);
+    if (!response.ok) {
+      setOtpButton(false);
+      setEmail("");
+    }
   };
 
   const resendOTP = async (e) => {
@@ -71,27 +58,26 @@ const ForgotPassword = () => {
     setTimerCount(60);
     setOtpValues(["", "", "", ""]);
     otpFieldsRef.current[0].focus();
-    await sendOTP();
+    const response = await sendOTP(email);
+    if (!response.ok) {
+      setOtpButton(false);
+      setEmail("");
+    }
   };
 
   const verfiyOTP = async (e) => {
     setVerifyButton(true);
     e.preventDefault();
-    setTimeout(async () => {
-      try {
-        const otp = otpValues.join("");
-        console.log(otp);
-        const response = await axios.post(`${api}/auth/verifyotp`, {
-          email: email,
-          OTP: otp,
-        });
-        console.log(response.data);
-        setOtpVerified(true);
-      } catch (error) {
-        setVerifyButton(false);
-        handleError(error);
-      }
-    }, 2000);
+    const otp = otpValues.join("");
+    const response = await verifyOtpUtils(otp, email);
+    console.log(response);
+    if (!response.ok) {
+      otpFieldsRef.current[0].focus();
+      setOtpValues(["", "", "", ""]);
+      setVerifyButton(false);
+    } else {
+      setOtpVerified(true);
+    }
   };
 
   useEffect(() => {

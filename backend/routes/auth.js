@@ -4,7 +4,7 @@ const {
   register,
   login,
   googleLogin,
-  resetMail,
+  resetPasswordMail,
   verifyOtp,
   resetPassword,
 } = require("../controllers/auth");
@@ -12,7 +12,7 @@ const {
 router.post("/register", register);
 router.post("/login", login);
 router.post("/googleLogin", googleLogin);
-router.post("/reset", resetMail);
+router.post("/reset", resetPasswordMail);
 router.post("/verifyotp", verifyOtp);
 router.patch("/resetPassword", resetPassword);
 // router.get("/:userId/verify/:token", verifyToken);

@@ -1,61 +1,62 @@
-import { useState } from "react"
-import { signupFields } from "../constants/formFields"
-import { FormAction } from "./Form"
-import Input from "./Input"
-import { GoogleLogin } from "@react-oauth/google"
-import { Link, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { handleGoogleLoginUtils } from "../utils/utils"
-import { handeLoginRegister } from "../utils/utils"
-import { toast } from "react-toastify"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useState } from "react";
+import { signupFields } from "../constants/formFields";
+import { FormAction } from "./Form";
+import Input from "./Input";
+import { GoogleLogin } from "@react-oauth/google";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { handleGoogleLoginUtils } from "../utils/utils";
+import { handleRegister } from "../utils/utils";
+import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 let fieldsState = {
-  "userName" :"",
-  "email" :"",
-  "password":"",
-  "confirm-password" :""
-}
+  userName: "",
+  email: "",
+  password: "",
+  "confirm-password": "",
+};
 
 export default function Signup() {
-  const [signupState, setSignupState] = useState(fieldsState)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const [signupState, setSignupState] = useState(fieldsState);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange = (e) =>
-    {
+  const handleChange = (e) => {
     const target_id = e.target.id;
     const target_val = e.target.value;
     console.log((target_id, target_val));
-    setSignupState({ ...signupState, [target_id] : target_val  })
-  }
+    setSignupState({ ...signupState, [target_id]: target_val });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (signupState["password"] !== signupState["confirm-password"]) {
       toast.error("Passwords do not match", {
         autoClose: 1500,
-      })
-      return
+      });
+      return;
     }
     const body = {
       name: signupState["userName"],
       email: signupState["email"],
       password: signupState["password"],
+    };
+    const response = await handleRegister(body, dispatch, navigate);
+    if (response.ok) {
+      navigate("/OTP");
     }
-    const data = await handeLoginRegister(body, "register", dispatch, navigate)
-    console.log(data)
-    setSignupState(fieldsState)
-  }
+    setSignupState(fieldsState);
+  };
 
   const handleGoogleLogin = async (credentials) => {
-    setSignupState(fieldsState)
-    await handleGoogleLoginUtils(credentials, dispatch, navigate)
-  }
+    setSignupState(fieldsState);
+    await handleGoogleLoginUtils(credentials, dispatch, navigate);
+  };
 
   const handleError = (errorMsg) => {
-    toast.error(errorMsg)
-  }
+    toast.error(errorMsg);
+  };
 
   return (
     // <div>
@@ -154,9 +155,7 @@ export default function Signup() {
             </div>
 
             <form onSubmit={handleSubmit}>
-            
               <div className="mt-3  relative">
-                
                 <input
                   onChange={handleChange}
                   value={signupState["userName"]}
@@ -250,5 +249,5 @@ export default function Signup() {
         </div>
       </div>
     </div>
-  )
+  );
 }

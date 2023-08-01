@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const typeEnum = ["register", "resetPassword"];
+
 const OTPSchema = new Schema(
   {
     userId: {
@@ -11,6 +13,11 @@ const OTPSchema = new Schema(
     otp: {
       type: String,
       required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: typeEnum,
     },
   },
   { timestamps: true }

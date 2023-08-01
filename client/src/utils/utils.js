@@ -25,37 +25,46 @@ export const handleGoogleLoginUtils = async (
     navigate("/");
   } catch (error) {
     console.log(error);
-    return {};
     // handleError(data.msg);
+    return { ok: false };
   }
 };
 
-export const handeLoginRegister = async (
-  body,
-  type,
-  dispatch,
-  navigate,
-  remember = false
-) => {
+export const handleRegister = async (body, dispatch, navigate) => {
   try {
-    const { data } = await toast.promise( api.post(`/auth/${type}`, { ...body }), {
-        pending: "Logging In",
-        success: "Login Successful",
-        error: "Unsuccessful Login Attempt"
-      })
-    // const { data } = await api.post(`/auth/${type}`, { ...body });
-    if (type === "register") {
-      navigate("/login");
-    } else if (type === "login") {
-      dispatch(login(data));
-      if (remember) {
-        localStorage.setItem("token", data.token);
+    const { data } = await toast.promise(
+      api.post("/auth/register", { ...body }),
+      {
+        pending: "Sending OTP",
+        success: "OTP sent to mail Successfully",
+        error: "Unsuccessful sign up Attempt",
       }
-      navigate("/");
+    );
+    console.log(data);
+    return { ok: true, ...data };
+  } catch (error) {
+    console.log(error);
+    return { ok: false };
+  }
+};
+
+export const handleLogin = async (body, dispatch, navigate, remember) => {
+  try {
+    const { data } = await toast.promise(api.post("/auth/login", { ...body }), {
+      pending: "Logging In",
+      success: "Login Successful",
+      error: "Unsuccessful Login Attempt",
+    });
+    // const { data } = await api.post(`/auth/${type}`, { ...body });
+    dispatch(login(data));
+    if (remember) {
+      localStorage.setItem("token", data.token);
     }
+    navigate("/");
     return data;
   } catch (error) {
     console.log(error);
+    return { ok: false };
   }
 };
 
@@ -69,6 +78,7 @@ export const getAppsUtil = async (token, dispatch) => {
     dispatch(setApps({ apps: data.apps }));
   } catch (error) {
     console.log("from dashboard", error);
+    return { ok: false };
   }
 };
 
@@ -81,6 +91,7 @@ export const deleteAppUtil = async (appId, token, dispatch) => {
     });
     dispatch(deleteApp(appId));
   } catch (error) {
+    return { ok: false };
     // handleError(data.msg);
   }
 };
@@ -113,5 +124,44 @@ export const createUpdateAppUtil = async (
     navigate("/");
   } catch (error) {
     console.log(error);
+    return { ok: false };
+  }
+};
+
+export const verifyOtpUtils = async (otp, email) => {
+  try {
+    console.log(otp);
+    const response = await api.post("/auth/verifyotp", {
+      email: email,
+      OTP: otp,
+    });
+    console.log(response.data);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false };
+  }
+};
+
+export const sendOTP = async (email) => {
+  try {
+    await api.post("/auth/reset", {
+      email: email,
+    });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false };
+  }
+};
+
+export const resetpasswordUtils = async (email, password) => {
+  try {
+    const response = await api.patch("/auth/resetPassword", {
+      email: email,
+      newPassword: password,
+    });
+    console.log(response.data);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false };
   }
 };

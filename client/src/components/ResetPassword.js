@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { FormAction } from "./Form";
 import Input from "./Input";
-import axios from "axios";
+import { resetpasswordUtils } from "../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = ({ email }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordButtonPressed, setPasswordButtonPressed] = useState(false);
-  const api = process.env.REACT_APP_BASE_URL;
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,15 +19,11 @@ const ResetPassword = ({ email }) => {
       // TO-DO ADD PASSWORD NOT MATCHING ALERT
       return;
     }
-    try {
-      const response = await axios.patch(`${api}/auth/resetPassword`, {
-        email: email,
-        newPassword: password,
-      });
-      console.log(response.data);
-    } catch (error) {
+    const response = await resetpasswordUtils(email, password);
+    if (!response.ok) {
       setPasswordButtonPressed(false);
-      console.log(error);
+    } else {
+      navigate("/login");
     }
   };
 
