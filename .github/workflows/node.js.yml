@@ -26,18 +26,3 @@ jobs:
         run: |
           cd client
           npm run build
-
-      - name: Deploy to EC2
-        env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
-        run: |
-          # Copy the built React app to the EC2 instance using scp
-          scp -r client/build user@your_ec2_instance_ip:/path/to/your/destination
-
-          # Optional: Copy the .env file to the EC2 instance
-          scp client/.env user@your_ec2_instance_ip:/path/to/your/destination
-
-          # Optional: Restart the React app on the EC2 instance (if needed)
-          # For example, using SSH
-          # ssh user@your_ec2_instance_ip 'pm2 restart your_app_name'
