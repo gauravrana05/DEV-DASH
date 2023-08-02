@@ -107,7 +107,7 @@ export default function Signup() {
               ></path>
             </svg>
             <div className="absolute bottom-5 right-2">
-              <Link href="/" className="block transition hover:rotate-180">
+              <Link to="/" className="block transition hover:rotate-180">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 stroke-current text-white"
@@ -163,7 +163,7 @@ export default function Signup() {
                   name="userName"
                   type="text"
                   required
-                  className=" outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className=" outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="willPig@tailwind.com"
                 />
 
@@ -182,7 +182,7 @@ export default function Signup() {
                   name="email"
                   type="text"
                   required
-                  className=" outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className=" outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="willPig@tailwind.com"
                 />
                 <label
@@ -200,7 +200,7 @@ export default function Signup() {
                   id="password"
                   type="password"
                   name="password"
-                  className="outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className="outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="Password"
                 />
                 <label
@@ -218,7 +218,7 @@ export default function Signup() {
                   id="confirm-password"
                   type="confirm-password"
                   name="confirm-password"
-                  className="outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className="outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="Password"
                 />
                 <label

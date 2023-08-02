@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { loginFields } from "../constants/formFields";
-import { FormAction, FormExtra } from "./Form";
-import Input from "./Input";
+import {  FormExtra } from "./Form";
 import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { handleLogin, handleGoogleLoginUtils } from "../utils/utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useGoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
 
 export default function Login() {
@@ -17,22 +13,12 @@ export default function Login() {
   };
 
   const [loginState, setLoginState] = useState(fieldsState);
+
   const [remember, setRemember] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const login = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
-      console.log(credentialResponse);
-      handleGoogleLoginUtils(
-        credentialResponse.access_token,
-        dispatch,
-        navigate
-      );
-    },
-    onError: () => toast("Login failed"),
-    flow: "auth-code",
-  });
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
   };
@@ -54,41 +40,6 @@ export default function Login() {
   };
 
   return (
-    // <div>
-    //   <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-    //     <div className="-space-y-px">
-    //       {fields.map((field) => (
-    //         <Input
-    //           key={field.id}
-    //           handleChange={handleChange}
-    //           value={loginState[field.id]}
-    //           labelText={field.labelText}
-    //           labelFor={field.labelFor}
-    //           id={field.id}
-    //           name={field.name}
-    //           type={field.type}
-    //           isRequired={field.isRequired}
-    //           placeholder={field.placeholder}
-    //         />
-    //       ))}
-    //     </div>
-    //     <FormExtra setRemember={setRemember} />
-    //     <FormAction text="Login" />
-    //   </form>
-
-    //   <div className="flex justify-center items-center py-4">
-    // <GoogleLogin
-    //   text="continue_with"
-    //   width="100%"
-    //   shape="pill"
-    //   onSuccess={(credentialResponse) =>
-    //     handleGoogleLogin(credentialResponse.credential)
-    //   }
-    //   onError={() => handleError("Login failed")}
-    // />
-    //   </div>
-    // </div>
-
     <div className="relative min-h-screen bg-purple-100 backdrop-blur flex justify-center items-center bg-texture bg-cover py-28 sm:py-0">
       <div className="p-4 sm:p-8 flex-1 ">
         <div className="max-w-[420px] min-w-[320px] bg-white rounded-b-3xl mx-auto">
@@ -105,7 +56,7 @@ export default function Login() {
               ></path>
             </svg>
             <div className="absolute bottom-5 right-2">
-              <Link href="/" className="block transition hover:rotate-180">
+              <Link to="/" className="block transition hover:rotate-180">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 stroke-current text-white"
@@ -173,7 +124,7 @@ export default function Login() {
                   name="email"
                   type="text"
                   required
-                  className=" outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className=" outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="willPig@tailwind.com"
                 />
                 <label
@@ -191,7 +142,7 @@ export default function Login() {
                   id="password"
                   type="password"
                   name="password"
-                  className="outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  className="outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="Password"
                 />
                 <label

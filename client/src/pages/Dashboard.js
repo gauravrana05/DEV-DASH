@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Card from "../components/Card.js";
 import Navbar from "../components/Navbar.js";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../components/Spinner.js";
 import CECard from "../components/CECard.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Transition } from "@headlessui/react";
@@ -123,7 +122,7 @@ export default function Dashboard() {
 
       {isLoading ? (
         <div className="flex justify-center ">
-          <Spinner loading={isLoading} />
+
         </div>
       ) : (
         <>

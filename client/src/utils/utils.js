@@ -22,8 +22,9 @@ export const handleGoogleLoginUtils = async (
     const { data } = await api.post("/auth/googleLogin", { credentials });
     console.log(data);
     dispatch(login(data));
-    navigate("/");
-  } catch (error) {
+    navigate("/dashboard");
+  }
+   catch (error) {
     console.log(error);
     // handleError(data.msg);
     return { ok: false };
@@ -60,7 +61,7 @@ export const handleLogin = async (body, dispatch, navigate, remember) => {
     if (remember) {
       localStorage.setItem("token", data.token);
     }
-    navigate("/");
+    navigate("/dashboard");
     return data;
   } catch (error) {
     console.log(error);
@@ -121,7 +122,7 @@ export const createUpdateAppUtil = async (
       console.log(data);
       dispatch(updateApp(data.app));
     }
-    navigate("/");
+    navigate("/dashboard");
   } catch (error) {
     console.log(error);
     return { ok: false };

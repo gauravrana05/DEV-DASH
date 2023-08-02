@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
 import Dashboard from "./pages/Dashboard";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import store from "./app/store";
@@ -29,9 +30,10 @@ function App() {
         <BrowserRouter>
           <GoogleOAuthProvider clientId={GoogleClientId}>
             <Routes>
+              <Route path="/" element = { <HomePage/> } />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/auth/:id/verify/:token" element={<Emailverify />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
