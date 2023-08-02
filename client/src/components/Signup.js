@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { signupFields } from "../constants/formFields";
-import { FormAction } from "./Form";
-import Input from "./Input";
-import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleGoogleLoginUtils } from "../utils/utils";
 import { handleRegister } from "../utils/utils";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -48,15 +43,6 @@ export default function Signup() {
       navigate(`/OTP/${encodedEmail}/register`);
     }
     setSignupState(fieldsState);
-  };
-
-  const handleGoogleLogin = async (credentials) => {
-    setSignupState(fieldsState);
-    await handleGoogleLoginUtils(credentials, dispatch, navigate);
-  };
-
-  const handleError = (errorMsg) => {
-    toast.error(errorMsg);
   };
 
   return (

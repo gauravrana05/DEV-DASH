@@ -1,10 +1,9 @@
 import { useState } from "react";
-import {  FormExtra } from "./Form";
+import { FormExtra } from "./Form";
 import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { handleLogin, handleGoogleLoginUtils } from "../utils/utils";
-import { toast } from "react-toastify";
 
 export default function Login() {
   let fieldsState = {
