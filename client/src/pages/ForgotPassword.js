@@ -1,98 +1,25 @@
-import React, { useEffect, useRef, useState } from "react"
-import Header from "../components/Header"
-import Input from "../components/Input"
-import { forgotPasswordFields } from "../constants/formFields"
-import { FormAction } from "../components/Form"
-import ResetPassword from "../components/ResetPassword"
-import { sendOTP, verifyOtpUtils } from "../utils/utils"
-import { Link } from "react-router-dom"
+import React, { useState } from "react";
+import { sendOTP } from "../utils/utils";
+import { Link, useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("")
-  const [otpButton, setOtpButton] = useState(false)
-  const [verifyButton, setVerifyButton] = useState(false)
-  const [timerCount, setTimerCount] = useState(60)
-  const [otpValues, setOtpValues] = useState(["", "", "", ""])
-  const [resendOtpDisable, setResendOtpDisable] = useState(true)
-  const [otpVerified, setOtpVerified] = useState(false)
-
-  const otpFieldsRef = useRef([])
-
-  const handleOTPChange = (e, index) => {
-    const input = e.target.value
-    if (input.length > 1 || input < "0" || input > "9") {
-      return
-    }
-    const newOTPValues = [...otpValues]
-    newOTPValues[index] = input
-    setOtpValues(newOTPValues)
-    if (input.length === 1 && index < otpValues.length - 1) {
-      otpFieldsRef.current[index + 1].focus()
-    }
-  }
-
-  const handleBackspace = (index) => {
-    if (otpValues[index] !== "") {
-      const newotpValues = [...otpValues]
-      newotpValues[index] = ""
-      setOtpValues(newotpValues)
-    } else if (index > 0) {
-      otpFieldsRef.current[index - 1].focus()
-    }
-  }
+  const [email, setEmail] = useState("");
+  const [otpButton, setOtpButton] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setTimerCount(60)
-    console.log("setting timer count to ", timerCount)
-    setOtpButton(true)
-    const response = await sendOTP(email)
+    e.preventDefault();
+    setOtpButton(true);
+    const response = await sendOTP(email);
     if (!response.ok) {
-      setOtpButton(false)
-      setEmail("")
+      setOtpButton(false);
+      setEmail("");
     }
-  }
-
-  const resendOTP = async (e) => {
-    if (resendOtpDisable) return
-    setResendOtpDisable(true)
-    setTimerCount(60)
-    setOtpValues(["", "", "", ""])
-    otpFieldsRef.current[0].focus()
-    const response = await sendOTP(email)
-    if (!response.ok) {
-      setOtpButton(false)
-      setEmail("")
+    if (response.ok) {
+      const encodedEmail = btoa(email);
+      navigate(`/otp/${encodedEmail}/password`);
     }
-  }
-
-  const verfiyOTP = async (e) => {
-    setVerifyButton(true)
-    e.preventDefault()
-    const otp = otpValues.join("")
-    const response = await verifyOtpUtils(otp, email)
-    console.log(response)
-    if (!response.ok) {
-      otpFieldsRef.current[0].focus()
-      setOtpValues(["", "", "", ""])
-      setVerifyButton(false)
-    } else {
-      setOtpVerified(true)
-    }
-  }
-
-  useEffect(() => {
-    let interval = setInterval(() => {
-      setTimerCount((lastTimerCount) => {
-        lastTimerCount <= 1 && clearInterval(interval)
-        if (lastTimerCount <= 1) setResendOtpDisable(false)
-        if (lastTimerCount <= 0) return lastTimerCount
-        return lastTimerCount - 1
-      })
-    }, 1000) //each count lasts for a second
-    //cleanup the interval on complete
-    return () => clearInterval(interval)
-  }, [resendOtpDisable])
+  };
 
   return (
     <div className="relative min-h-screen bg-purple-100 backdrop-blur flex justify-center items-center bg-texture bg-cover py-28 sm:py-0">
@@ -140,108 +67,44 @@ const ForgotPassword = () => {
                 </span>
               </Link>
             </div>
-            {otpVerified ? (
-              <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                {" "}
-                Reset Password{" "}
-              </h1>
-            ) : (
-              <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                {" "}
-                Forgot password
-              </h1>
-            )}
-
-            {!otpButton && (
-              <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                <div className="my-10">
-                  Enter your email to reset your password
-                </div>
-
-                <div className="mb-10 relative">
-                  <input
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    value={email}
-                    id="emaill"
-                    type="emaill"
-                    name="emaill"
-                    className="outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
-                    placeholder="Password"
-                  />
-                  <label
-                    htmlFor="emaill"
-                    className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
-                  >
-                    Email Address
-                  </label>
-                </div>
-                <button
-                  type="submit"
-                  disabled={otpButton}
-                  className="w-full py-2 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
-                >
-                  Send OTP
-                </button>
-              </form>
-            )}
-            {otpButton && !otpVerified && (
-              <div>
-                <form onSubmit={verfiyOTP}>
-                  <div className="flex flex-col space-y-16">
-                    <div className=" mt-10 flex flex-row items-center justify-between mx-auto w-full max-w-xs">
-                      {otpValues.map((value, index) => {
-                        return (
-                          <div key={index} className="w-16 h-16 ">
-                            <input
-                              maxLength="1"
-                              className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700 disabled:cursor-not-allowed"
-                              type="text"
-                              required={true}
-                              value={value}
-                              autoFocus={index === 0}
-                              disabled={verifyButton}
-                              onChange={(e) => handleOTPChange(e, index)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Backspace") {
-                                  handleBackspace(index)
-                                }
-                              }}
-                              ref={(ref) => {
-                                otpFieldsRef.current[index] = ref
-                              }}
-                            ></input>
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full py-2 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
-                    >
-                      Verify Account
-                    </button>
-                    <div className="flex flex-col space-y-2">
-                      <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                        <p>Didn't recieve code?</p>{" "}
-                        <button
-                          className="flex flex-row items-center enabled:text-blue-700 enabled:underline disabled:text-gray disabled:cursor-dafult"
-                          type="button"
-                          disabled={resendOtpDisable}
-                          onClick={() => resendOTP()}
-                        >
-                          {resendOtpDisable
-                            ? `Resend OTP in ${timerCount}s`
-                            : "Resend OTP"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
+            <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              {" "}
+              Forgot password
+            </h1>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+              <div className="my-10">
+                Enter your email to reset your password
               </div>
-            )}
-            {otpVerified && <ResetPassword email={email} />}
+
+              <div className="mb-10 relative">
+                <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  value={email}
+                  id="emaill"
+                  type="emaill"
+                  name="emaill"
+                  disabled={otpButton}
+                  className="outline-none disabled:cursor-not-allowed peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
+                  placeholder="Password"
+                />
+                <label
+                  htmlFor="emaill"
+                  className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
+                >
+                  Email Address
+                </label>
+              </div>
+              <button
+                type="submit"
+                disabled={otpButton}
+                className="w-full py-2 text-lg text-white disabled:cursor-not-allowed font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
+              >
+                Send OTP
+              </button>
+            </form>
+            {/* {otpButton && !otpVerified && <OTP />} */}
+            {/* {otpVerified && <ResetPassword email={email} />} */}
           </div>
         </div>
       </div>
@@ -325,7 +188,7 @@ const ForgotPassword = () => {
     //     </div>
     //   </div>
     // </div>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

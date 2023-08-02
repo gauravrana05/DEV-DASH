@@ -19,8 +19,6 @@ const register = async (req, res) => {
   const user = await User.create({ ...req.body });
   await sendOtpmail(email, user._id, "register");
   res.status(201).json({ msg: "Email Sent" });
-  // const token = user.createJWT();
-  // res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
 };
 
 const login = async (req, res) => {
@@ -100,6 +98,7 @@ const verifyOtp = async (req, res) => {
   }
   if (verifyUserOtp.type === "register") {
     user.verified = true;
+    console.log("register user verified");
     await user.save();
   }
   await otp.findOneAndDelete({ userId: user._id });

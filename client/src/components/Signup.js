@@ -44,7 +44,8 @@ export default function Signup() {
     };
     const response = await handleRegister(body, dispatch, navigate);
     if (response.ok) {
-      navigate("/OTP");
+      const encodedEmail = btoa(signupState["email"]);
+      navigate(`/OTP/${encodedEmail}/register`);
     }
     setSignupState(fieldsState);
   };
