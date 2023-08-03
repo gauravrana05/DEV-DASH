@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("express-async-errors");
+const path = require('path')
 
 // extra security packages
 const helmet = require("helmet");
@@ -19,6 +20,7 @@ const appsRouter = require("./routes/apps");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
+app.use(express.static("./client/build"))
 app.set("trust proxy", 1);
 app.use(
   rateLimiter({
@@ -38,6 +40,9 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/apps", authenticateUser, appsRouter);
+app.get("*",(req, res)=>{
+  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+} )
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
