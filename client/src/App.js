@@ -33,7 +33,7 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/resetpassword/:email" element={<ResetPassword />} />
-              <Route path="/otp/:email/:type" element={<OTP />} />
+              <Route path="/otp" element={<OTP />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </GoogleOAuthProvider>
