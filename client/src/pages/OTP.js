@@ -1,17 +1,33 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import { sendOTP, verifyOtpUtils } from "../utils/utils";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const OTP = () => {
-  const params = useParams();
-  const email = atob(params.email);
-  const type = params.type;
   const otpFieldsRef = useRef([]);
+  const toastId = useRef(null);
+  const email = useRef("");
+  const type = useRef("");
   const [otpValues, setOtpValues] = useState(["", "", "", ""]);
   const [resendOtpDisable, setResendOtpDisable] = useState(true);
   const [verifyButton, setVerifyButton] = useState(false);
   const [timerCount, setTimerCount] = useState(60);
   const navigate = useNavigate();
+  const { state } = useLocation();
+  useEffect(() => {
+    if (!state) {
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Page expired", {
+          autoClose: 1500,
+        });
+      }
+      navigate("/");
+    } else {
+      email.current = state.email;
+      type.current = state.type;
+    }
+  }, []);
 
   const resendOTP = async (e) => {
     if (resendOtpDisable) return;

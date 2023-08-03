@@ -23,22 +23,25 @@ export const handleGoogleLoginUtils = async (
     console.log(data);
     dispatch(login(data));
     navigate("/dashboard");
-  }
-   catch (error) {
+  } catch (error) {
     console.log(error);
     // handleError(data.msg);
     return { ok: false };
   }
 };
 
-export const handleRegister = async (body, dispatch, navigate) => {
+export const handleRegister = async (body) => {
   try {
     const { data } = await toast.promise(
       api.post("/auth/register", { ...body }),
       {
         pending: "Sending OTP",
         success: "OTP sent to mail Successfully",
-        error: "Unsuccessful sign up Attempt",
+        error: {
+          render({ data: error }) {
+            return error.response.data.msg;
+          },
+        },
       }
     );
     console.log(data);

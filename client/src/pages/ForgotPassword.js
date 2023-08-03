@@ -16,8 +16,12 @@ const ForgotPassword = () => {
       setEmail("");
     }
     if (response.ok) {
-      const encodedEmail = btoa(email);
-      navigate(`/otp/${encodedEmail}/password`);
+      navigate("/otp", {
+        state: {
+          email,
+          type: "password",
+        },
+      });
     }
   };
 
@@ -103,8 +107,6 @@ const ForgotPassword = () => {
                 Send OTP
               </button>
             </form>
-            {/* {otpButton && !otpVerified && <OTP />} */}
-            {/* {otpVerified && <ResetPassword email={email} />} */}
           </div>
         </div>
       </div>

@@ -39,8 +39,12 @@ export default function Signup() {
     };
     const response = await handleRegister(body, dispatch, navigate);
     if (response.ok) {
-      const encodedEmail = btoa(signupState["email"]);
-      navigate(`/OTP/${encodedEmail}/register`);
+      navigate("/OTP", {
+        state: {
+          email: signupState["userName"],
+          type: "register",
+        },
+      });
     }
     setSignupState(fieldsState);
   };
@@ -155,7 +159,7 @@ export default function Signup() {
                 />
 
                 <label
-                  for="userName"
+                  htmlFor="userName"
                   className="  absolute left-0 -top-3.5 text-gray-600 text-xs transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Username
@@ -173,7 +177,7 @@ export default function Signup() {
                   placeholder="willPig@tailwind.com"
                 />
                 <label
-                  for="email"
+                  htmlFor="email"
                   className=" absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Email
@@ -191,7 +195,7 @@ export default function Signup() {
                   placeholder="Password"
                 />
                 <label
-                  for="password"
+                  htmlFor="password"
                   className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Password
@@ -203,13 +207,13 @@ export default function Signup() {
                   value={signupState["confirm-password"]}
                   required
                   id="confirm-password"
-                  type="confirm-password"
+                  type="password"
                   name="confirm-password"
                   className="outline-none peer w-full px-0.5 py-1.5 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                   placeholder="Password"
                 />
                 <label
-                  for="confirm-password"
+                  htmlFor="confirm-password"
                   className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-600 peer-focus:text-sm"
                 >
                   Confirm Password
