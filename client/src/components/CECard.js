@@ -1,73 +1,73 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
-import { createAppField } from "../constants/formFields";
-import Input from "./Input";
-import Select from "react-tailwindcss-select";
+import React, { useState, useEffect } from "react"
+import { createAppField } from "../constants/formFields"
+
+import Select from "react-tailwindcss-select"
 // import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { providerOptions } from "../constants/providerOptions";
-import { createUpdateAppUtil } from "../utils/utils";
-import { createApp, updateApp } from "../features/userSlice";
+import { useDispatch, useSelector } from "react-redux"
+import { providerOptions } from "../constants/providerOptions"
+import { createUpdateAppUtil } from "../utils/utils"
+import { createApp, updateApp } from "../features/userSlice"
 
 const CECard = ({ appId, setIsOpen }) => {
-  const options = providerOptions;
+  const options = providerOptions
 
   const setProviders = (providers) => {
     const updatedProviders = options.filter((option) => {
-      return providers.includes(option.value);
-    });
-    return updatedProviders;
-  };
+      return providers.includes(option.value)
+    })
+    return updatedProviders
+  }
 
   const getProviders = (prov) => {
     return prov.map((provider) => {
-      return provider.value;
-    });
-  };
+      return provider.value
+    })
+  }
 
-  const [prov, setProv] = useState([]);
-  const [name, setName] = useState("");
-  const token = useSelector((state) => state.user.token);
+  const [prov, setProv] = useState([])
+  const [name, setName] = useState("")
+  const token = useSelector((state) => state.user.token)
   // const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const app = useSelector((state) => {
-    return state.user.apps.filter((app) => app._id === appId);
-  });
+    return state.user.apps.filter((app) => app._id === appId)
+  })
   const setInitialState = () => {
     if (app.length === 0) {
-      setName("");
-      setProv([]);
+      setName("")
+      setProv([])
     } else {
-      setName(app[0].appName);
-      setProv(setProviders(app[0].providers));
+      setName(app[0].appName)
+      setProv(setProviders(app[0].providers))
     }
-  };
+  }
 
   useEffect(() => {
-    setInitialState();
-  }, [appId]);
+    setInitialState()
+  }, [appId])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updatedProviders = getProviders(prov);
-    const type = app.length === 0 ? "create" : "update";
+    e.preventDefault()
+    const updatedProviders = getProviders(prov)
+    const type = app.length === 0 ? "create" : "update"
     const response = await createUpdateAppUtil(
       type,
       { appName: name, providers: updatedProviders },
       token,
       appId
-    );
+    )
     if (response.ok) {
       if (type === "create") {
-        dispatch(createApp(response.data));
+        dispatch(createApp(response.data))
       } else {
-        dispatch(updateApp(response.data.app));
+        dispatch(updateApp(response.data.app))
       }
     }
-    setName("");
-    setProv(null);
-    setIsOpen(false);
-  };
+    setName("")
+    setProv(null)
+    setIsOpen(false)
+  }
 
   return (
     <div className="  relative w-auto px-10 bg-slate-800 h-auto overflow-visible rounded-md shadow-xl sm:rounded-xl ">
@@ -80,18 +80,24 @@ const CECard = ({ appId, setIsOpen }) => {
             Application Details
           </h2>
           <div className=" text-white">
-            <Input
-              key={createAppField.id}
-              handleChange={(e) => setName(e.target.value)}
-              labelText={createAppField.labelText}
-              labelFor={createAppField.labelFor}
-              value={name}
-              id={createAppField.id}
-              name={createAppField.name}
-              type={createAppField.type}
-              isRequired={createAppField.isRequired}
-              placeholder={createAppField.placeholder}
-            />
+            <div className="mt-10 relative">
+              <label
+                for={createAppField.labelFor}
+                className="block mb-2 text-indigo-500"
+              >
+                {createAppField.labelText}
+              </label>
+              <input
+                onChange = {(e) => setName(e.target.value)}
+                value={name}
+                required = {createAppField.isRequired}
+                id = {createAppField.id}
+                name = {createAppField.name}
+                type = {createAppField.type}
+                className = "w-full p-2 mb-6 text-indigo-700 border-b-2 border-indigo-500 outline-none focus:bg-gray-300"
+                placeholder = {createAppField.placeholder}
+              />
+            </div>
             <label htmlFor="" className="text-white">
               Choose Providers
             </label>
@@ -113,7 +119,7 @@ const CECard = ({ appId, setIsOpen }) => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CECard;
+export default CECard

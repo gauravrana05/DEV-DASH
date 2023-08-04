@@ -130,7 +130,7 @@ export default function Login() {
               <span className="h-px bg-gray-400 w-14"></span>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form className="flex flex-col" onSubmit={handleSubmit}>
               <div className="relative">
                 <input
                   onChange={handleChange}
@@ -172,7 +172,7 @@ export default function Login() {
               </div>
               <button
                 type="submit"
-                className="w-full mt-9 py-4 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
+                className="w-4/5 mx-auto mt-9 py-3 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
               >
                 Login
               </button>

@@ -11,17 +11,27 @@ let fieldsState = {
   email: "",
   password: "",
   "confirm-password": "",
+  terms : false
 };
 
 export default function Signup() {
   const [signupState, setSignupState] = useState(fieldsState);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const target_id = e.target.id;
     const target_val = e.target.value;
-    setSignupState({ ...signupState, [target_id]: target_val });
+    console.log(target_id, target_val);
+    
+    if(target_id === "terms"){
+       setSignupState({...signupState, [target_id] : e.target.checked});
+      }
+    else
+      setSignupState({ ...signupState, [target_id]: target_val });
+    
+    console.log(signupState.terms, " this is terms");
   };
 
   const handleGoogleLogin = async (credentials) => {
@@ -118,13 +128,6 @@ export default function Signup() {
                 // onError={() => handleError("Login failed")}
               />
             </div>
-            {/* <div className="flex items-center justify-around mt-4">
-              <div className="w-14 h-14 text-center rounded-full bg-red-500 text-white saturate-100 transition-all hover:bg-red-600">
-                <Link to="#" className="block mt-4">
-                  <FontAwesomeIcon icon="fab fa-google fa-lg" />
-                </Link>
-              </div>
-            </div> */}
             <div className="flex items-center justify-center space-x-2 pt-4 pb-2">
               <span className="h-px bg-gray-400 w-14"></span>
               <span className="font-normal text-sm text-gray-500">
@@ -133,7 +136,7 @@ export default function Signup() {
               <span className="h-px bg-gray-400 w-14"></span>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form className="flex flex-col" onSubmit={handleSubmit}>
               <div className="mt-3  relative">
                 <input
                   onChange={handleChange}
@@ -210,7 +213,13 @@ export default function Signup() {
               <div className=" flex mt-9 justify-start">
                 <label className="inline-flex ">
                   <input
+                    id = "terms"
+                    name="terms"
                     type="checkbox"
+                    required
+                    value={signupState.terms}
+                    onChange={handleChange}
+
                     className="rounded border-gray-300 text-purple-600 focus:border-purple-300 focus:ring focus:ring-offset-0 focus:ring-purple-200/50"
                   />
                   <span className="ml-2 text-xs">
@@ -226,7 +235,8 @@ export default function Signup() {
               </div>
               <button
                 type="submit"
-                className="w-full mt-10 py-4 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"
+                disabled = {!signupState.terms}
+                className="w-4/5 mx-auto mt-10 py-3 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none disabled:cursor-not-allowed"
               >
                 Sign Up
               </button>
