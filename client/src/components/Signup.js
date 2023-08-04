@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleRegister } from "../utils/utils";
+import { handleGoogleLoginUtils, handleRegisterUtils } from "../utils/utils";
 import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GoogleLogin } from "@react-oauth/google";
+import { login } from "../features/userSlice";
 
 let fieldsState = {
   userName: "",
@@ -20,8 +21,16 @@ export default function Signup() {
   const handleChange = (e) => {
     const target_id = e.target.id;
     const target_val = e.target.value;
-    console.log((target_id, target_val));
     setSignupState({ ...signupState, [target_id]: target_val });
+  };
+
+  const handleGoogleLogin = async (credentials) => {
+    setSignupState(fieldsState);
+    const response = await handleGoogleLoginUtils(credentials);
+    if (response.ok) {
+      dispatch(login(response.data));
+      navigate("/dashboard");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,7 +46,7 @@ export default function Signup() {
       email: signupState["email"],
       password: signupState["password"],
     };
-    const response = await handleRegister(body, dispatch, navigate);
+    const response = await handleRegisterUtils(body, dispatch, navigate);
     if (response.ok) {
       navigate("/OTP", {
         state: {
@@ -50,38 +59,6 @@ export default function Signup() {
   };
 
   return (
-    // <div>
-    //       <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-    //         <div className="">
-    //           {fields.map((field) => (
-    //             <Input
-    //               key={field.id}
-    //               handleChange={handleChange}
-    //               value={signupState[field.id]}
-    //               labelText={field.labelText}
-    //               labelFor={field.labelFor}
-    //               id={field.id}
-    //               name={field.name}
-    //               type={field.type}
-    //               isRequired={field.isRequired}
-    //               placeholder={field.placeholder}
-    //             />
-    //           ))}
-    //           <FormAction text="Signup" />
-    //         </div>
-    //       </form>
-    //       <div className="flex justify-center items-center py-4">
-    //         <GoogleLogin
-    //           text="continue_with"
-    //           width="100%"
-    //           shape="pill"
-    //           onSuccess={(credentialResponse) =>
-    //             handleGoogleLogin(credentialResponse.credential)
-    //           }
-    //           onError={() => handleError("Login failed")}
-    //         />
-    //       </div>
-    // </div>
     <div className="relative min-h-screen bg-purple-100 backdrop-blur flex justify-center items-center bg-texture bg-cover py-28 sm:py-0">
       <div className="p-4 sm:p-8 flex-1 ">
         <div className="max-w-[420px] min-w-[320px] bg-white rounded-b-3xl mx-auto">
@@ -130,13 +107,24 @@ export default function Signup() {
                 How do you want to <strong>SignUp</strong> ?
               </p>
             </div>
-            <div className="flex items-center justify-around mt-4">
+            <div className="flex items-center justify-around mt-6">
+              <GoogleLogin
+                size="large"
+                text="continue_with"
+                shape="pill"
+                onSuccess={(credentialResponse) => {
+                  handleGoogleLogin(credentialResponse.credential);
+                }}
+                // onError={() => handleError("Login failed")}
+              />
+            </div>
+            {/* <div className="flex items-center justify-around mt-4">
               <div className="w-14 h-14 text-center rounded-full bg-red-500 text-white saturate-100 transition-all hover:bg-red-600">
-                <Link href="#" className="block mt-4">
+                <Link to="#" className="block mt-4">
                   <FontAwesomeIcon icon="fab fa-google fa-lg" />
                 </Link>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center justify-center space-x-2 pt-4 pb-2">
               <span className="h-px bg-gray-400 w-14"></span>
               <span className="font-normal text-sm text-gray-500">
@@ -219,7 +207,23 @@ export default function Signup() {
                   Confirm Password
                 </label>
               </div>
-
+              <div className=" flex mt-9 justify-start">
+                <label className="inline-flex ">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 text-purple-600 focus:border-purple-300 focus:ring focus:ring-offset-0 focus:ring-purple-200/50"
+                  />
+                  <span className="ml-2 text-xs">
+                    Check here if you agree to{" "}
+                    <Link
+                      to="#"
+                      className="font-semibold text-purple-600 hover:underline"
+                    >
+                      the terms.
+                    </Link>
+                  </span>
+                </label>
+              </div>
               <button
                 type="submit"
                 className="w-full mt-10 py-4 text-lg text-white font-semibold text-center rounded-full bg-indigo-500 transition-all hover:bg-indigo-600 focus:outline-none"

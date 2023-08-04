@@ -36,7 +36,7 @@ const OTP = () => {
     setTimerCount(60);
     setOtpValues(["", "", "", ""]);
     otpFieldsRef.current[0].focus();
-    const response = await sendOTP(email);
+    const response = await sendOTP(email.current, type.current);
     if (!response.ok) {
     }
   };
@@ -45,19 +45,23 @@ const OTP = () => {
     setVerifyButton(true);
     e.preventDefault();
     const otp = otpValues.join("");
-    const response = await verifyOtpUtils(otp, email);
-    console.log(response);
+    const response = await verifyOtpUtils(otp, email.current, type.current);
     if (!response.ok) {
+      if (response.msg === "OTP Expired") {
+        setTimerCount(0);
+      }
       otpFieldsRef.current[0].focus();
       setOtpValues(["", "", "", ""]);
       setVerifyButton(false);
     } else {
-      if (type === "register") {
+      if (type.current === "register") {
         navigate("/login");
       } else {
-        const encodedEmail = btoa(email);
-        console.log("email = ", atob(encodedEmail));
-        navigate(`/resetpassword/${encodedEmail}`);
+        navigate(`/resetpassword`, {
+          state: {
+            email: email.current,
+          },
+        });
       }
     }
   };
@@ -115,7 +119,7 @@ const OTP = () => {
               ></path>
             </svg>
             <div className="absolute bottom-5 right-2">
-              <Link href="/" className="block transition hover:rotate-180">
+              <Link to="/" className="block transition hover:rotate-180">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 stroke-current text-white"

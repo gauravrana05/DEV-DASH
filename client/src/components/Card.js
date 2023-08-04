@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { EditIcon, DeleteIcon } from "../utils/Icons";
 import { deleteAppUtil } from "../utils/utils";
+import { deleteApp } from "../features/userSlice";
 
 export default function Card({ appName, providers, appId, editApp }) {
   const token = useSelector((state) => state.user.token);
@@ -19,7 +20,12 @@ export default function Card({ appName, providers, appId, editApp }) {
             </button>
             <button
               className=" px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
-              onClick={() => deleteAppUtil(appId, token, dispatch)}
+              onClick={async () => {
+                const response = await deleteAppUtil(appId, token);
+                if (response.ok) {
+                  dispatch(deleteApp(appId));
+                }
+              }}
             >
               <DeleteIcon />
             </button>

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { resetpasswordUtils } from "../utils/utils";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
-  const params = useParams();
-  const email = atob(params.email);
+  const { state } = useLocation();
+  const email = useRef("");
+  const toastId = useRef(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordButtonPressed, setPasswordButtonPressed] = useState(false);
@@ -15,18 +17,32 @@ const ResetPassword = () => {
     e.preventDefault();
     setPasswordButtonPressed(true);
     if (password !== confirmPassword) {
-      console.log("password not matching");
       setPasswordButtonPressed(false);
-      // TO-DO ADD PASSWORD NOT MATCHING ALERT
+      toast.error("Passwords do not match", {
+        autoClose: 1500,
+      });
       return;
     }
-    const response = await resetpasswordUtils(email, password);
+    const response = await resetpasswordUtils(email.current, password);
     if (!response.ok) {
       setPasswordButtonPressed(false);
     } else {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    if (!state) {
+      if (!toast.isActive(toastId.current)) {
+        toastId.current = toast.error("Page expired", {
+          autoClose: 1500,
+        });
+      }
+      navigate("/");
+    } else {
+      email.current = state.email;
+    }
+  });
 
   return (
     <div className="relative min-h-screen bg-purple-100 backdrop-blur flex justify-center items-center bg-texture bg-cover py-28 sm:py-0">
@@ -45,7 +61,7 @@ const ResetPassword = () => {
               ></path>
             </svg>
             <div className="absolute bottom-5 right-2">
-              <Link href="/" className="block transition hover:rotate-180">
+              <Link to="/" className="block transition hover:rotate-180">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 stroke-current text-white"
@@ -75,7 +91,7 @@ const ResetPassword = () => {
               </Link>
             </div>
             <div>
-              <div className="my-5">Change password for {email}</div>
+              <div className="my-5">Change password for {email.current}</div>
               <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                 <div className="my-10 relative">
                   <input

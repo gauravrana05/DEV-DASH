@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setOtpButton(true);
-    const response = await sendOTP(email);
+    const response = await sendOTP(email, "password");
     if (!response.ok) {
       setOtpButton(false);
       setEmail("");
@@ -42,7 +42,7 @@ const ForgotPassword = () => {
               ></path>
             </svg>
             <div className="absolute bottom-5 right-2">
-              <Link href="/" className="block transition hover:rotate-180">
+              <Link to="/" className="block transition hover:rotate-180">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-8 w-8 stroke-current text-white"

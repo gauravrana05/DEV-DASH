@@ -32,7 +32,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/resetpassword/:email" element={<ResetPassword />} />
+              <Route path="/resetpassword" element={<ResetPassword />} />
               <Route path="/otp" element={<OTP />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
@@ -41,7 +41,7 @@ function App() {
       </Provider>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

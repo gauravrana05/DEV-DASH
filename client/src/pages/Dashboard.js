@@ -9,6 +9,8 @@ import { Transition } from "@headlessui/react";
 import Footer from "../components/Footer.js";
 import { getAppsUtil } from "../utils/utils.js";
 import { ArrowIcon } from "../utils/Icons.js";
+import { setApps } from "../features/userSlice.js";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,10 +41,17 @@ export default function Dashboard() {
   useEffect(() => {
     setIsLoading(true);
     if (!token || token.size === 0) {
-      console.log("navigating because of this");
+      toast.error("please login to continue", {
+        autoClose: 1500,
+      });
       navigate("/login");
     } else {
-      getAppsUtil(token, dispatch).then(setIsLoading(false));
+      getAppsUtil(token).then((response) => {
+        if (response.ok) {
+          dispatch(setApps({ apps: response.data.apps }));
+        }
+        setIsLoading(false);
+      });
     }
   }, []);
 
@@ -121,9 +130,7 @@ export default function Dashboard() {
       <hr className=" shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]  w-9/12 h-1 border-1 border-black m-auto" />
 
       {isLoading ? (
-        <div className="flex justify-center ">
-
-        </div>
+        <div className="flex justify-center "></div>
       ) : (
         <>
           {apps.length === 0 ? (

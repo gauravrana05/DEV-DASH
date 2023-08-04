@@ -22,6 +22,7 @@ export default function Input({
         type={type}
         name={name}
         required={isRequired}
+        value={value}
         // placeholder={placeholder}
         disabled={disabled}
       />

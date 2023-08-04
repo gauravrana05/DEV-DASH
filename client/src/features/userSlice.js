@@ -7,11 +7,12 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: "user" ,
-  initialState ,
+  name: "user",
+  initialState,
   reducers: {
     login: (state, action) => {
       state.token = action.payload.token;
+      localStorage.setItem("token", action.payload.token);
     },
     logout: (state) => {
       state.token = "";

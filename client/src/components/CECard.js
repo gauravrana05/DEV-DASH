@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import { createAppField } from "../constants/formFields";
 import Input from "./Input";
 import Select from "react-tailwindcss-select";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { providerOptions } from "../constants/providerOptions";
 import { createUpdateAppUtil } from "../utils/utils";
+import { createApp, updateApp } from "../features/userSlice";
 
 const CECard = ({ appId, setIsOpen }) => {
   const options = providerOptions;
@@ -27,7 +28,7 @@ const CECard = ({ appId, setIsOpen }) => {
   const [prov, setProv] = useState([]);
   const [name, setName] = useState("");
   const token = useSelector((state) => state.user.token);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const app = useSelector((state) => {
     return state.user.apps.filter((app) => app._id === appId);
@@ -50,14 +51,19 @@ const CECard = ({ appId, setIsOpen }) => {
     e.preventDefault();
     const updatedProviders = getProviders(prov);
     const type = app.length === 0 ? "create" : "update";
-    await createUpdateAppUtil(
+    const response = await createUpdateAppUtil(
       type,
       { appName: name, providers: updatedProviders },
       token,
-      appId,
-      dispatch,
-      navigate
+      appId
     );
+    if (response.ok) {
+      if (type === "create") {
+        dispatch(createApp(response.data));
+      } else {
+        dispatch(updateApp(response.data.app));
+      }
+    }
     setName("");
     setProv(null);
     setIsOpen(false);

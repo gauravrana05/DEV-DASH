@@ -3,7 +3,9 @@ import { FormExtra } from "./Form";
 import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleLogin, handleGoogleLoginUtils } from "../utils/utils";
+import { handleLogin, handleGoogleLoginUtils, sendOTP } from "../utils/utils";
+import { login } from "../features/userSlice";
+import { toast } from "react-toastify";
 
 export default function Login() {
   let fieldsState = {
@@ -24,18 +26,36 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleLogin(loginState, dispatch, navigate, remember);
+    // TO-DO: disable fields
+    const response = await handleLogin(loginState);
+    if (response.ok) {
+      dispatch(login(response.data));
+      if (remember) {
+        // Do something else like increase jwt lifetime
+        // localStorage.setItem("token", response.data.token);
+      }
+      navigate("/dashboard");
+    } else if (response.msg === "User not verified") {
+      await sendOTP(loginState["email"]);
+      navigate("/otp", {
+        state: {
+          email: loginState["email"],
+          type: "register",
+        },
+      });
+    }
+    // TO-DO: enable fielsds
     setLoginState(fieldsState);
   };
 
   const handleGoogleLogin = async (credentials) => {
     setLoginState(fieldsState);
-    await handleGoogleLoginUtils(credentials, dispatch, navigate);
-  };
-
-  const handleError = (errorMsg) => {
-    console.log("From Login", errorMsg);
-    //TO-DO: Add alert with data.msg
+    const response = await handleGoogleLoginUtils(credentials);
+    if (response.ok) {
+      dispatch(login(response.data));
+      navigate("/dashboard");
+    } else {
+    }
   };
 
   return (
@@ -88,22 +108,18 @@ export default function Login() {
               </p>
             </div>
             <div className="flex items-center justify-around mt-6">
-              {/* <div className="w-14 h-14 text-center rounded-full  bg-sky-700 text-white saturate-100 transition-all hover:bg-sky-800"> */}
-              {/* <button onClick={login}>
-                  <Link className="block mt-4">
-                    <FontAwesomeIcon icon="fab fa-google fa-lg" />
-                  </Link>
-                </button> */}
-              {/* </div> */}
               <GoogleLogin
                 size="large"
-                type="icon"
-                shape="circle"
+                text="continue_with"
+                shape="pill"
                 onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse, " This is the response");
                   handleGoogleLogin(credentialResponse.credential);
                 }}
-                onError={() => handleError("Login failed")}
+                onError={() =>
+                  toast.error("login Failed", {
+                    autoClose: 1500,
+                  })
+                }
               />
             </div>
             <div className="flex items-center justify-center space-x-2 py-4">
@@ -153,23 +169,6 @@ export default function Login() {
               </div>
               <div className="mt-4">
                 <FormExtra setRemember={setRemember} />
-              </div>
-              <div className=" flex mt-9 justify-center">
-                <label className="inline-flex ">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-purple-600 focus:border-purple-300 focus:ring focus:ring-offset-0 focus:ring-purple-200/50"
-                  />
-                  <span className="ml-2 text-xs">
-                    Check here if you agree to{" "}
-                    <Link
-                      href="#"
-                      className="font-semibold text-purple-600 hover:underline"
-                    >
-                      the terms.
-                    </Link>
-                  </span>
-                </label>
               </div>
               <button
                 type="submit"

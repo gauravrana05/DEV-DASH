@@ -62,7 +62,7 @@ const deleteApp = async (req, res) => {
   if (!app) {
     throw new NotFoundError(`No job with id ${jobId}`);
   }
-  res.status(StatusCodes.OK).send();
+  res.status(StatusCodes.OK).json();
 };
 
 module.exports = {

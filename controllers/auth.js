@@ -6,13 +6,15 @@ const random = require("random-string-generator");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const { sendOtpmail } = require("../utils/utils");
+const ExpiredError = require("../errors/expired-otp");
+const UserExistsError = require("../errors/user-exists");
 
 const register = async (req, res) => {
   const email = req.body.email;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     //throw new error of user already registered
-    return res.status(400).json({ msg: "User already exists" });
+    throw new UserExistsError("User already exists");
   }
   const salt = await bcrypt.genSalt(10);
   req.body.password = await bcrypt.hash(req.body.password, salt);
@@ -31,15 +33,13 @@ const login = async (req, res) => {
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  if (!user.verified) {
-    // throw new user not verified error
-    res.status(400).json({ msg: "User not verified" });
-  }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  // compare password
+  if (!user.verified) {
+    throw new UnauthenticatedError("User not verified");
+  }
   const token = user.createJWT();
   res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
 };
@@ -56,7 +56,15 @@ const googleLogin = async (req, res) => {
     const password = random((length = 16), (type = "alphanumeric"));
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
-    user = await User.create({ email, name, password: hashPassword });
+    user = await User.create({
+      email,
+      name,
+      password: hashPassword,
+      verified: true,
+    });
+  } else if (!user.verified) {
+    user.verified = true;
+    await user.save();
   }
 
   const token = user.createJWT();
@@ -66,37 +74,40 @@ const googleLogin = async (req, res) => {
 
 /* VERIFY EMAIL AND SEND OTP */
 const resetPasswordMail = async (req, res) => {
-  const { email } = req.body;
+  const { email, type } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
   console.log("reached here");
-  await sendOtpmail(email, user._id, "resetPassword");
+  await sendOtpmail(
+    email,
+    user._id,
+    type === "password" ? "resetPassword" : "register"
+  );
   console.log("mail sent");
   res.status(201).json({ msg: "Email Sent" });
 };
 
 /* VERIFY OTP */
 const verifyOtp = async (req, res) => {
-  const { OTP, email } = req.body;
+  const { OTP, email, type } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
   const verifyUserOtp = await otp.findOne({ otp: OTP, userId: user._id });
   if (!verifyUserOtp) {
-    // make new error for invalid otp
-    return res.status(400).json({ msg: "Invalid OTP." });
+    throw new UnauthenticatedError("Invalid OTP");
   }
   const currentTime = new Date();
   const createdAtTime = new Date(verifyUserOtp.createdAt);
   const fiveMinutesAgo = new Date(currentTime.getTime() - 5 * 60 * 1000);
   if (createdAtTime < fiveMinutesAgo) {
     await otp.deleteOne({ _id: verifyUserOtp._id });
-    return res.status(400).json({ msg: "OTP expired" });
+    throw new ExpiredError("OTP Expired");
   }
-  if (verifyUserOtp.type === "register") {
+  if (type === "register") {
     user.verified = true;
     console.log("register user verified");
     await user.save();
