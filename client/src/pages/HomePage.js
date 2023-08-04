@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 export default function SignupPage() {
   return (
-    <div className=" bg-texture w-full h-auto">
+    <div className=" bg-texture w-full h-screen">
       <div className=" p-10">
         <Link to="#_" className="flex mx-16 font-medium">
           <span className=" text-3xl font-black leading-none text-white select-none">
@@ -26,7 +26,7 @@ export default function SignupPage() {
           >
             <span class="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-500 via-gray-800 to-black"></span>
             <span class="absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-90 translate-x-24 bg-gray-500 rounded-full opacity-30 group-hover:rotate-0 ease"></span>
-            <span class="text-lg relative text-emerald-400 font-bold">Register</span>
+            <span class="text-lg relative text-slate-100 font-bold">Register</span>
           </Link>
 
           <Link
@@ -35,7 +35,7 @@ export default function SignupPage() {
           >
             <span class="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-500 via-gray-800 to-black"></span>
             <span class="absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-90 translate-x-24 bg-gray-500 rounded-full opacity-30 group-hover:rotate-0 ease"></span>
-            <span class="text-lg relative text-emerald-400 font-bold">Login</span>
+            <span class="text-lg relative text-slate-100 font-bold">Login</span>
           </Link>
         </div>
       </div>
