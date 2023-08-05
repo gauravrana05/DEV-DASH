@@ -92,11 +92,8 @@ const CECard = ({ appId, setIsOpen }) => {
               <input
                 onChange={(e) => {
                   setNameLen(e.target.value.length)
-                  if (nameLen <= 25) {
+                  if (nameLen <= 23) {
                     setName(e.target.value)
-                  }
-                  else{
-                    toast("App name too long");
                   }
                 }}
                 value={name}
@@ -104,9 +101,15 @@ const CECard = ({ appId, setIsOpen }) => {
                 id={createAppField.id}
                 name={createAppField.name}
                 type={createAppField.type}
-                className="w-full p-2 mb-6 text-indigo-700 border-b-2 border-indigo-500 outline-none focus:bg-gray-300"
+                className="w-full p-2 mb-2 text-indigo-700 border-b-2 border-indigo-500 outline-none focus:bg-gray-300"
                 placeholder={createAppField.placeholder}
               />
+               <label
+                for={createAppField.labelFor}
+                className="absolute right-2 top-10  mb-6 text-sm text-gray-600"
+              >
+                {nameLen}/25
+              </label>
             </div>
             <label for="" className="text-white">
               Choose Tech Stack
