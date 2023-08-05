@@ -118,7 +118,7 @@ const ResetPassword = () => {
                     value={confirmPassword}
                     required
                     id="confirm-password"
-                    type="confirm-password"
+                    type="password"
                     name="confirm-password"
                     className="outline-none peer w-full px-0.5 py-1 border-0 border-b-2 border-gray-300 placeholder-transparent focus:ring-0 focus:border-purple-600"
                     placeholder="Password"

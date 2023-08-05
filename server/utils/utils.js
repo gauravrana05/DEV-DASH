@@ -11,12 +11,9 @@ const sendOtpmail = async (email, id, typeOfMail) => {
         : "Reset Password OTP";
     const OTP = random((length = 4), (type = "numeric"));
     await otp.create({ userId: id, otp: OTP, type: typeOfMail });
-    console.log("trying to send mail");
     const html = htmlBody(OTP);
     await sendEmail(email, subject, "", html);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 module.exports = { sendOtpmail };

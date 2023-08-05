@@ -20,8 +20,6 @@ module.exports = async (email, subject, text, html = "") => {
       html,
     });
   } catch (error) {
-    console.log("email not sent");
     // add email not sent internal server 500 error
-    console.log(error);
   }
 };

@@ -29,18 +29,22 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.methods.createJWT = function () {
+UserSchema.methods.createJWT = function (remember) {
+  const expiresIn = remember
+    ? process.env.JWT_EXTENDED_LIFETIME
+    : process.env.JWT_LIFETIME;
+
   return jwt.sign(
     { userId: this._id, name: this.name },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn,
     }
   );
 };
 
-UserSchema.methods.comparePassword = async function (canditatePassword) {
-  const isMatch = await bcrypt.compare(canditatePassword, this.password);
+UserSchema.methods.comparePassword = function (canditatePassword) {
+  const isMatch = bcrypt.compare(canditatePassword, this.password);
   return isMatch;
 };
 

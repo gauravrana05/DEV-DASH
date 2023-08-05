@@ -24,7 +24,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, remember } = req.body;
 
   if (!email || !password) {
     throw new BadRequestError("Please provide email and password");
@@ -40,7 +40,7 @@ const login = async (req, res) => {
   if (!user.verified) {
     throw new UnauthenticatedError("User not verified");
   }
-  const token = user.createJWT();
+  const token = user.createJWT(remember);
   res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
 };
 
@@ -68,7 +68,6 @@ const googleLogin = async (req, res) => {
   }
 
   const token = user.createJWT();
-  console.log({ user: { name: user.name }, token });
   return res.status(200).json({ user: { name: user.name }, token });
 };
 
@@ -79,13 +78,11 @@ const resetPasswordMail = async (req, res) => {
   if (!user) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
-  console.log("reached here");
   await sendOtpmail(
     email,
     user._id,
     type === "password" ? "resetPassword" : "register"
   );
-  console.log("mail sent");
   res.status(201).json({ msg: "Email Sent" });
 };
 
@@ -109,7 +106,6 @@ const verifyOtp = async (req, res) => {
   }
   if (type === "register") {
     user.verified = true;
-    console.log("register user verified");
     await user.save();
   }
   await otp.findOneAndDelete({ userId: user._id });

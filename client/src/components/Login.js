@@ -27,13 +27,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // TO-DO: disable fields
-    const response = await handleLogin(loginState);
+    const response = await handleLogin({ ...loginState, remember });
     if (response.ok) {
       dispatch(login(response.data));
-      if (remember) {
-        // Do something else like increase jwt lifetime
-        // localStorage.setItem("token", response.data.token);
-      }
       navigate("/dashboard");
     } else if (response.msg === "User not verified") {
       await sendOTP(loginState["email"]);
