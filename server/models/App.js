@@ -18,7 +18,7 @@ const AppSchema = new mongoose.Schema(
     appName: {
       type: String,
       required: [true, "Please provide company name"],
-      maxlength: [12, "App Name too long"],
+      maxlength: [25, "App Name too long"],
     },
     providers: {
       type: [String],

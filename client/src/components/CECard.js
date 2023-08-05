@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { providerOptions } from "../constants/providerOptions"
 import { createUpdateAppUtil } from "../utils/utils"
 import { createApp, updateApp } from "../features/userSlice"
+import { toast } from "react-toastify"
 
 const CECard = ({ appId, setIsOpen }) => {
-  
   const options = providerOptions
 
   const setProviders = (providers) => {
@@ -26,6 +26,7 @@ const CECard = ({ appId, setIsOpen }) => {
     })
   }
 
+  const [nameLen, setNameLen] = useState(0)
   const [prov, setProv] = useState([])
   const [name, setName] = useState("")
   const token = useSelector((state) => state.user.token)
@@ -89,28 +90,37 @@ const CECard = ({ appId, setIsOpen }) => {
                 {createAppField.labelText}
               </label>
               <input
-                onChange = {(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setNameLen(e.target.value.length)
+                  if (nameLen <= 25) {
+                    setName(e.target.value)
+                  }
+                  else{
+                    toast("App name too long");
+                  }
+                }}
                 value={name}
-                required = {createAppField.isRequired}
-                id = {createAppField.id}
-                name = {createAppField.name}
-                type = {createAppField.type}
-                className = "w-full p-2 mb-6 text-indigo-700 border-b-2 border-indigo-500 outline-none focus:bg-gray-300"
-                placeholder = {createAppField.placeholder}
+                required={createAppField.isRequired}
+                id={createAppField.id}
+                name={createAppField.name}
+                type={createAppField.type}
+                className="w-full p-2 mb-6 text-indigo-700 border-b-2 border-indigo-500 outline-none focus:bg-gray-300"
+                placeholder={createAppField.placeholder}
               />
             </div>
             <label for="" className="text-white">
               Choose Tech Stack
             </label>
-           
+
             <Select
               value={prov}
               isMultiple
               onChange={(value) => setProv(value)}
               options={options}
               placeholder="Search..."
-              searchInputPlaceholder ="Search"
-              isSearchable = {true}
+              searchInputPlaceholder="Search"
+              isSearchable={true}
+              required
             />
           </div>
           <span>
