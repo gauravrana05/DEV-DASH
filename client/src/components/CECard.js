@@ -10,6 +10,7 @@ import { createUpdateAppUtil } from "../utils/utils"
 import { createApp, updateApp } from "../features/userSlice"
 
 const CECard = ({ appId, setIsOpen }) => {
+  
   const options = providerOptions
 
   const setProviders = (providers) => {
@@ -70,7 +71,7 @@ const CECard = ({ appId, setIsOpen }) => {
   }
 
   return (
-    <div className="  relative w-auto px-10 bg-slate-800 h-auto overflow-visible rounded-md shadow-xl sm:rounded-xl ">
+    <div className="  bg-pattern relative w-auto px-10 bg-slate-800 h-auto overflow-visible rounded-md shadow-xl sm:rounded-xl ">
       <div className="flex justify-center w-full  overflow-visible">
         <form
           className=" w-80 overflow-visible bg-slate-800 transition-all ease  shadow-[rgba(20,_35,_90,_1)_0px_30px_90px] hover:shadow-[rgba(28,_100,_140,_1)_0px_30px_90px] my-7 space-y-6 border-2 border-indigo-300 px-8 py-3 rounded-lg"
@@ -83,7 +84,7 @@ const CECard = ({ appId, setIsOpen }) => {
             <div className="mt-10 relative">
               <label
                 for={createAppField.labelFor}
-                className="block mb-2 text-indigo-500"
+                className="block mb-2 text-white"
               >
                 {createAppField.labelText}
               </label>
@@ -98,14 +99,18 @@ const CECard = ({ appId, setIsOpen }) => {
                 placeholder = {createAppField.placeholder}
               />
             </div>
-            <label htmlFor="" className="text-white">
-              Choose Providers
+            <label for="" className="text-white">
+              Choose Tech Stack
             </label>
+           
             <Select
               value={prov}
               isMultiple
               onChange={(value) => setProv(value)}
               options={options}
+              placeholder="Search..."
+              searchInputPlaceholder ="Search"
+              isSearchable = {true}
             />
           </div>
           <span>

@@ -27,3 +27,7 @@ code {
     );
     background-size:cover;
 } 
+
+.bg-pattern{
+  background-image: url('../public/topography.svg');
+}
