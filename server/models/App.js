@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 const providerEnum = [
-  "Google",
-  "Facebook",
-  "Binance",
-  "Twitter",
-  "Instagram",
-  "Spotify",
-  "Quora",
-  "Tinder",
-  "Bumble",
-  "Bybit",
+  "React",
+  "Tailwind",
+  "Express",
+  "MongoDB",
+  "Django",
+  "Angular",
+  "Firebase",
+  "Azure",
+  "AWS",
+  "NodeJS",
 ];
 
 const AppSchema = new mongoose.Schema(
